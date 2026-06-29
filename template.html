@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>旅程しおり 2026</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080F1E;--s1:#0F1B2E;--s2:#162030;--s3:#1C2840;
+  --border:rgba(255,255,255,.08);--brd-hi:rgba(255,255,255,.15);
+  --text:#E2EAF5;--text2:#8A9DB5;--text3:#4E6070;
+  --gold:#F0A020;--gold-bg:rgba(240,160,32,.12);--gold-brd:rgba(240,160,32,.38);
+  --g-all-bg:#1E1550;--g-all-tx:#9D8DF8;--g-all-bd:rgba(139,92,246,.35);
+  --g-a-bg:#0E2347;--g-a-tx:#60A5FA;--g-a-bd:rgba(59,130,246,.35);
+  --g-b-bg:#2B1300;--g-b-tx:#FB923C;--g-b-bd:rgba(249,115,22,.35);
+  --g-c-bg:#052818;--g-c-tx:#4ADE80;--g-c-bd:rgba(34,197,94,.35);
+  --ok:#4ADE80;--ng:#8A9DB5;
+  --r:8px;--r2:12px;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Hiragino Kaku Gothic Pro','Hiragino Sans','Noto Sans JP',sans-serif;min-height:100vh;padding-bottom:3rem;-webkit-font-smoothing:antialiased}
+.hdr{background:var(--s1);border-bottom:1px solid var(--border);padding:14px 16px 10px;position:sticky;top:0;z-index:20}
+.hdr-meta{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.hdr-title{font-size:17px;font-weight:700;margin-bottom:10px;line-height:1}
+.tz-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tz-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-family:inherit;cursor:pointer;transition:all .15s}
+.tz-btn.on{border-color:var(--gold-brd);background:var(--gold-bg);color:var(--gold)}
+.tz-btn:hover:not(.on){border-color:var(--brd-hi);color:var(--text)}
+.tz-abbr{font-weight:600}
+.tz-utc{font-size:10px;opacity:.6}
+.diff-pill{font-size:11px;padding:5px 10px;border-radius:var(--r);border:1px solid var(--border);background:var(--s2);color:var(--text3)}
+.main{padding:14px 14px 0;max-width:640px;margin:0 auto}
+.grp-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.grp-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:12px;font-family:inherit;cursor:pointer;transition:all .12s}
+.grp-btn.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
+.grp-btn:hover:not(.on){border-color:var(--brd-hi)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:10px 12px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--text);line-height:1}
+.stat-l{font-size:11px;color:var(--text3);margin-top:3px}
+.dt-sec{margin-bottom:18px}
+.dt-head{font-size:13px;font-weight:600;color:var(--text2);padding-bottom:8px;margin-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.dt-tz{font-size:11px;color:var(--text3);font-weight:400}
+.ev{display:grid;grid-template-columns:56px 1px 1fr;gap:0 10px;margin-bottom:6px;align-items:stretch}
+.ev-time{text-align:right;padding-top:10px;min-height:40px}
+.ev-t{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.2}
+.ev-src{font-size:10px;color:var(--text3);margin-top:3px}
+.ev-shift{font-size:10px;margin-top:2px;color:var(--gold)}
+.ev-shift.prev{color:var(--text3)}
+.ev-line{background:var(--brd-hi);border-radius:1px;margin:6px 0}
+.ev-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:9px 12px;transition:border-color .12s}
+.ev-card:hover{border-color:var(--brd-hi)}
+.badges{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:5px}
+.badge{font-size:11px;padding:1px 8px;border-radius:20px;white-space:nowrap}
+.g-all{background:var(--g-all-bg);color:var(--g-all-tx);border:1px solid var(--g-all-bd)}
+.g-a{background:var(--g-a-bg);color:var(--g-a-tx);border:1px solid var(--g-a-bd)}
+.g-b{background:var(--g-b-bg);color:var(--g-b-tx);border:1px solid var(--g-b-bd)}
+.g-c{background:var(--g-c-bg);color:var(--g-c-tx);border:1px solid var(--g-c-bd)}
+.st-ok{font-size:11px;color:var(--ok)}
+.st-ng{font-size:11px;color:var(--ng)}
+.ev-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:3px}
+.ev-loc{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:3px}
+.ev-loc::before{content:"📍";font-size:10px}
+.split-banner{background:var(--s1);border:1px dashed var(--brd-hi);border-radius:var(--r2);padding:10px 14px;margin-bottom:8px;font-size:12px;color:var(--text2);text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.empty{text-align:center;padding:4rem 0;color:var(--text3);font-size:14px}
+footer{max-width:640px;margin:0 auto;padding:20px 16px;text-align:center;font-size:12px;color:var(--text3);line-height:1.7}
+footer a{color:var(--gold);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.updated{font-size:11px;color:var(--text3);margin-top:6px}
+@media(max-width:400px){
+  .tz-btn{padding:6px 10px;font-size:12px}
+  .hdr-title{font-size:15px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stats .stat:last-child{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-meta" id="trip-meta">GROUP TRAVEL · 2026</div>
+  <h1 class="hdr-title">🌍 旅程しおり</h1>
+  <div class="tz-row" id="tz-row"></div>
+</header>
+
+<main class="main">
+  <div class="stats" id="stats"></div>
+  <div class="grp-row" id="grp-row"></div>
+  <div id="timeline"></div>
+</main>
+
+<footer>
+  <div>タイムゾーンを切り替えると全予定の現地時刻が自動変換されます</div>
+  <div style="margin-top:6px">
+    Notionで管理 →
+    <a href="https://app.notion.com/p/38eea09ee62c8166ad9af49457cc809f" target="_blank" rel="noopener">旅行しおりを開く</a>
+  </div>
+  <div class="updated" id="updated-at"></div>
+</footer>
+
+<script>
+/* ── データ (generate.js が自動書き換え) ── */
+const EVENTS     = /* __EVENTS_JSON__ */[];
+const UPDATED_AT = /* __UPDATED_AT__ */null;
+
+/* ── 設定 ── */
+const TRIP_NAME = "グループ旅行 2026";
+const MEMBERS   = 10;
+
+/* ── 定数 ── */
+const TZS = [
+  { id:"JST",  flag:"🇯🇵", abbr:"JST",  utc:"+9",  offset:9  },
+  { id:"CEST", flag:"🌍",  abbr:"CEST", utc:"+2",  offset:2  },
+  { id:"CET",  flag:"🌍",  abbr:"CET",  utc:"+1",  offset:1  },
+  { id:"UTC",  flag:"🌐",  abbr:"UTC",  utc:"±0",  offset:0  },
+];
+const GRP_FILTER = [
+  { id:"all_f", label:"すべて" },
+  { id:"all",   label:"🌐 全員" },
+  { id:"a",     label:"🔵 Aチーム" },
+  { id:"b",     label:"🟠 Bチーム" },
+];
+const BADGE_CLASS = { all:"g-all", a:"g-a", b:"g-b", c:"g-c" };
+const BADGE_LABEL = { all:"🌐 全員", a:"🔵 Aチーム", b:"🟠 Bチーム", c:"🟢 Cチーム" };
+const WDAYS = ["日","月","火","水","木","金","土"];
+
+let selTZ  = TZS[0];
+let selGrp = "all_f";
+
+/* ── ユーティリティ ── */
+function p2(n){ return String(n).padStart(2,"0") }
+
+function toConv(isoLocal, fromOff, toOff){
+  const [date, time="00:00"] = isoLocal.split("T");
+  const [y,mo,d] = date.split("-").map(Number);
+  const [h,mi]   = time.split(":").map(Number);
+  const utcMs = Date.UTC(y,mo-1,d,h-fromOff,mi);
+  const tMs   = utcMs + toOff*3_600_000;
+  const D = new Date(tMs);
+  return {
+    dateStr:`${D.getUTCFullYear()}-${p2(D.getUTCMonth()+1)}-${p2(D.getUTCDate())}`,
+    timeStr:`${p2(D.getUTCHours())}:${p2(D.getUTCMinutes())}`,
+    ms:tMs,
+    srcDay:d, tgtDay:D.getUTCDate(),
+    srcMo:mo, tgtMo:D.getUTCMonth()+1,
+  };
+}
+
+function fmtDate(ds){
+  const [y,mo,d]=ds.split("-").map(Number);
+  return `${mo}/${d}（${WDAYS[new Date(Date.UTC(y,mo-1,d)).getUTCDay()]}）`;
+}
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") }
+
+/* ── 描画 ── */
+function render(){
+  const filtered = EVENTS
+    .map(ev=>({...ev, conv:toConv(ev.dt,ev.srcTZ,selTZ.offset)}))
+    .filter(ev=>selGrp==="all_f"||ev.group===selGrp)
+    .sort((a,b)=>a.conv.ms-b.conv.ms);
+
+  const byDate = new Map();
+  filtered.forEach(ev=>{
+    if(!byDate.has(ev.conv.dateStr)) byDate.set(ev.conv.dateStr,[]);
+    byDate.get(ev.conv.dateStr).push(ev);
+  });
+
+  /* stats */
+  document.getElementById("stats").innerHTML=`
+    <div class="stat"><div class="stat-n">${byDate.size}</div><div class="stat-l">日間</div></div>
+    <div class="stat"><div class="stat-n">${filtered.filter(e=>e.group==="all").length}</div><div class="stat-l">全員予定</div></div>
+    <div class="stat"><div class="stat-n">${filtered.filter(e=>e.group!=="all").length}</div><div class="stat-l">サブグループ</div></div>
+  `;
+
+  if(!filtered.length){
+    document.getElementById("timeline").innerHTML=`<div class="empty">予定がありません</div>`;
+    return;
+  }
+
+  let html="";
+  for(const [dk,evs] of byDate){
+    html+=`<div class="dt-sec">
+      <div class="dt-head">📅 ${fmtDate(dk)}<span class="dt-tz">${selTZ.flag} ${selTZ.abbr}基準</span></div>`;
+
+    for(const ev of evs){
+      const showSrc  = ev.srcTZ!==selTZ.offset;
+      const dayShift = ev.conv.tgtDay-ev.conv.srcDay+(ev.conv.tgtMo-ev.conv.srcMo)*30;
+      const bc       = BADGE_CLASS[ev.group]||"g-all";
+      const bl       = BADGE_LABEL[ev.group]||ev.group;
+      const banner   = ev.isSplit  ? `<div class="split-banner">↙↘ ここでグループが分岐します</div>`
+                     : ev.isRejoin ? `<div class="split-banner">↗↖ 全員が再合流します！</div>`
+                     : "";
+      html+=banner+`
+      <div class="ev">
+        <div class="ev-time">
+          <div class="ev-t">${ev.conv.timeStr}</div>
+          ${showSrc?`<div class="ev-src">元UTC+${ev.srcTZ}</div>`:""}
+          ${dayShift>0?`<div class="ev-shift">翌日</div>`:dayShift<0?`<div class="ev-shift prev">前日</div>`:""}
+        </div>
+        <div class="ev-line"></div>
+        <div class="ev-card">
+          <div class="badges">
+            <span class="badge ${bc}">${esc(bl)}</span>
+            <span class="${ev.status==="ok"?"st-ok":"st-ng"}">${ev.status==="ok"?"✅ 確定":"📝 計画中"}</span>
+          </div>
+          <div class="ev-name">${esc(ev.name)}</div>
+          ${ev.loc?`<div class="ev-loc">${esc(ev.loc)}</div>`:""}
+        </div>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+  document.getElementById("timeline").innerHTML=html;
+}
+
+/* ── 初期化 ── */
+document.getElementById("trip-meta").textContent=`${TRIP_NAME} · ${MEMBERS}名`;
+
+/* 最終更新 */
+if(UPDATED_AT){
+  const d = new Date(UPDATED_AT);
+  const jst = new Date(d.getTime()+9*3600000);
+  document.getElementById("updated-at").textContent=
+    `最終更新: ${jst.getUTCFullYear()}/${p2(jst.getUTCMonth()+1)}/${p2(jst.getUTCDate())} ${p2(jst.getUTCHours())}:${p2(jst.getUTCMinutes())} JST`;
+}
+
+/* TZボタン */
+const tzRow=document.getElementById("tz-row");
+TZS.forEach(tz=>{
+  const btn=document.createElement("button");
+  btn.className="tz-btn"+(tz.id===selTZ.id?" on":"");
+  btn.setAttribute("aria-pressed",tz.id===selTZ.id);
+  btn.innerHTML=`${tz.flag} <span class="tz-abbr">${tz.abbr}</span><span class="tz-utc">UTC${tz.utc}</span>`;
+  btn.addEventListener("click",()=>{
+    selTZ=tz;
+    document.querySelectorAll(".tz-btn").forEach(b=>{
+      b.classList.toggle("on",b===btn);
+      b.setAttribute("aria-pressed",b===btn);
+    });
+    const diff=tz.offset-9;
+    const pill=document.getElementById("diff-pill");
+    if(pill){ pill.textContent=diff===0?"":((diff>0?"+":"")+diff+"h (JST比)"); pill.style.display=diff===0?"none":""; }
+    render();
+  });
+  tzRow.appendChild(btn);
+});
+const pill=document.createElement("span");
+pill.id="diff-pill"; pill.className="diff-pill"; pill.style.display="none";
+tzRow.appendChild(pill);
+
+/* グループフィルター */
+const grpRow=document.getElementById("grp-row");
+GRP_FILTER.forEach(g=>{
+  const btn=document.createElement("button");
+  btn.className="grp-btn"+(g.id===selGrp?" on":"");
+  btn.textContent=g.label;
+  btn.addEventListener("click",()=>{
+    selGrp=g.id;
+    document.querySelectorAll(".grp-btn").forEach(b=>b.classList.toggle("on",b===btn));
+    render();
+  });
+  grpRow.appendChild(btn);
+});
+
+render();
+</script>
+</body>
+</html>
