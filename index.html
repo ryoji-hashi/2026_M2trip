@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>M2ヨーロッパ旅行</title>
+<meta property="og:title" content="M2ヨーロッパ旅行">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ryoji-hashi.github.io/2026_M2trip/">
+<meta property="og:image" content="https://ryoji-hashi.github.io/2026_M2trip/assets/header.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -39,6 +43,23 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
+/* ── hero banner ── */
+.hero{
+  position:relative;
+  height:200px;
+  background:var(--s1) url('assets/header.jpg') center/cover no-repeat;
+}
+.hero::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(8,15,30,0) 45%, rgba(8,15,30,.88) 100%);
+}
+.hero-title{
+  position:absolute; left:16px; right:16px; bottom:14px; z-index:1;
+  font-size:21px; font-weight:700; color:#fff; line-height:1.3;
+  text-shadow:0 2px 10px rgba(0,0,0,.6);
+}
+
 /* ── header ── */
 .hdr{
   background:var(--s1);
@@ -46,9 +67,7 @@ body{
   padding:14px 16px 10px;
   position:sticky; top:0; z-index:20;
 }
-.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.hdr-meta{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
-.hdr-title{font-size:17px;font-weight:700;margin-bottom:10px;line-height:1}
+.hdr-top{display:flex;justify-content:flex-end;align-items:flex-start;gap:10px;margin-bottom:10px}
 .hdr-edit-btn{
   flex-shrink:0;display:flex;align-items:center;gap:4px;
   padding:6px 11px;border-radius:var(--r);
@@ -203,7 +222,8 @@ footer a:hover{text-decoration:underline}
 /* mobile tweak */
 @media(max-width:400px){
   .tz-btn{padding:6px 10px;font-size:12px}
-  .hdr-title{font-size:15px}
+  .hero{height:150px}
+  .hero-title{font-size:17px}
   .stats{grid-template-columns:1fr 1fr}
   .stats .stat:last-child{grid-column:1/-1}
   .hdr-edit-btn{font-size:11px;padding:5px 9px}
@@ -214,18 +234,19 @@ footer a:hover{text-decoration:underline}
 /* print */
 @media print{
   .hdr{position:static}
+  .hero{display:none}
   body{background:#fff;color:#000}
 }
 </style>
 </head>
 <body>
 
+<div class="hero">
+  <h1 class="hero-title">🌍 M2ヨーロッパ旅行</h1>
+</div>
+
 <header class="hdr">
   <div class="hdr-top">
-    <div>
-      <div class="hdr-meta" id="trip-meta">GROUP TRAVEL · 2026</div>
-      <h1 class="hdr-title">🌍 M2ヨーロッパ旅行</h1>
-    </div>
     <a class="hdr-edit-btn" href="https://app.notion.com/p/38eea09ee62c8166ad9af49457cc809f" target="_blank" rel="noopener">✏️ Notionで予定を編集</a>
   </div>
   <div class="tz-row" id="tz-row"></div>
@@ -344,10 +365,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-06-30T05:23:54.155Z";
-
-/* ── 設定 ── */
-const TRIP_NAME = "グループ旅行 2026";
+const UPDATED_AT  = "2026-06-30T05:39:15.025Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -549,7 +567,6 @@ function render(){
 }
 
 /* ─────────── INIT ─────────── */
-document.getElementById("trip-meta").textContent = `${TRIP_NAME} · ${ALL_MEMBERS.length}名`;
 
 /* 最終更新 */
 if(UPDATED_AT){
