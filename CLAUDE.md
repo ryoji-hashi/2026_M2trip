@@ -43,9 +43,9 @@ Participation is per-event and per-person, not per-fixed-team. Each Notion row's
 All rendering logic lives inline in a `<script>` tag at the bottom of the HTML — there is no separate JS file:
 - `EVENTS` holds the event list (each event has `dt` as a local ISO string + `srcTZ` as a UTC offset number, plus `members`, `teamLabel`, `status`, `loc`, optional `isSplit`/`isRejoin` flags).
 - `ALL_MEMBERS` holds the full participant roster, used for the "全員" badge check, the member-filter buttons, and the header member count.
-- `toConv()` converts an event's local time from its source UTC offset to the currently selected display timezone (`TZS` array: JST/CEST/CET/UTC).
-- `render()` filters by the selected member (`selMember`, single-select — `null` means no filter), groups events by converted date, and rebuilds the `#stats`, `#grp-row`, and `#timeline` DOM.
-- The `#grp-row` filter buttons are generated dynamically from `ALL_MEMBERS` (plus a "すべて" button) — there is no fixed group-code list to maintain.
+- `toConv()` converts an event's local time from its source UTC offset to the currently selected display timezone. `TZS` is the route's leg-by-leg zone list (大阪/JST, 上海/CST, ヨーロッパ/CEST, ベトナム/ICT) — each entry carries a `place` name shown in parens next to the abbreviation in the TZ buttons, the date-section header, and the per-event "元〜" source label (`zoneForOffset()` looks up the place for an event's raw `srcTZ`). Update `TZS` if the trip route changes.
+- `render()` filters by the selected member (`selMember`, single-select — `null` means no filter) and the selected `view` (`"list"` | `"calendar"`), groups events by converted date, rebuilds `#stats`, and delegates to `renderListHtml()` or `renderCalendarHtml()` to fill `#timeline`/`#calendar` (only the active view's container is populated/shown).
+- The `#grp-row` filter buttons are generated dynamically from `ALL_MEMBERS` (plus a "すべて" button) — there is no fixed group-code list to maintain. `#view-row` (list/calendar toggle) is generated the same way from a small `VIEWS` array.
 
 ## Customization conventions
 

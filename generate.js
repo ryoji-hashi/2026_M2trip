@@ -40,9 +40,13 @@ function notionFetch(endpoint, body) {
         },
       },
       res => {
-        let raw = "";
-        res.on("data", c => (raw += c));
+        const chunks = [];
+        res.on("data", c => chunks.push(c));
         res.on("end", () => {
+          // Buffer単位で連結してから一括デコードする。
+          // チャンクごとに toString() すると、マルチバイト文字（「ヴェ」等）が
+          // チャンク境界をまたいだ時に文字化けする（実際に発生していた不具合）。
+          const raw = Buffer.concat(chunks).toString("utf8");
           try {
             const json = JSON.parse(raw);
             if (json.object === "error") reject(new Error(`Notion: ${json.message}`));
