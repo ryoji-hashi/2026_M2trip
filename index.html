@@ -95,8 +95,6 @@ body{
 }
 .tz-btn:hover:not(.on){border-color:var(--brd-hi);color:var(--text)}
 .tz-abbr{font-weight:600}
-.tz-place{font-size:11px;opacity:.85}
-.tz-utc{font-size:10px;opacity:.6}
 
 .diff-pill{
   font-size:11px;padding:5px 10px;
@@ -158,8 +156,6 @@ body{
 .ev-time{text-align:right;padding-top:10px;min-height:40px}
 .ev-t{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.2}
 .ev-t-end{font-size:11px;font-weight:600;color:var(--text2);font-variant-numeric:tabular-nums;margin-top:1px}
-.ev-shift{font-size:10px;margin-top:2px;color:var(--gold)}
-.ev-shift.prev{color:var(--text3)}
 .ev-line{background:var(--brd-hi);border-radius:1px;margin:6px 0}
 .ev-card{
   background:var(--s2);border:1px solid var(--border);
@@ -191,7 +187,7 @@ body{
 
 /* stats bar */
 .stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
   margin-top:18px;
 }
 .stat{
@@ -226,8 +222,6 @@ footer a:hover{text-decoration:underline}
   .tz-btn{padding:6px 10px;font-size:12px}
   .hero{height:150px}
   .hero-title{font-size:17px}
-  .stats{grid-template-columns:1fr 1fr}
-  .stats .stat:last-child{grid-column:1/-1}
   .hdr-edit-btn{font-size:11px;padding:5px 9px}
   .cal-cell{min-height:44px;padding:2px}
   .cal-ev{font-size:8px}
@@ -337,7 +331,7 @@ const EVENTS      = [
   },
   {
     "name": "ミラノ泊",
-    "dt": "2026-09-15T19:00",
+    "dt": "2026-09-15T20:00",
     "dtEnd": "2026-09-16T07:00",
     "srcTZ": 2,
     "members": [
@@ -389,7 +383,7 @@ const EVENTS      = [
   },
   {
     "name": "ヴェネツィア泊",
-    "dt": "2026-09-16T18:00",
+    "dt": "2026-09-16T20:00",
     "dtEnd": "2026-09-17T07:00",
     "srcTZ": 2,
     "members": [
@@ -455,8 +449,27 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
-    "name": "バルセロナ泊1/2",
+    "name": "Venas di Cadore泊1/3",
     "dt": "2026-09-17T18:00",
+    "dtEnd": "2026-09-19T07:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん",
+      "りょうじ"
+    ],
+    "groupTags": [
+      "山登り(3)"
+    ],
+    "loc": "",
+    "notes": "",
+    "status": "ok",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
+    "name": "バルセロナ泊1/2",
+    "dt": "2026-09-17T20:00",
     "dtEnd": "2026-09-18T07:00",
     "srcTZ": 2,
     "members": [
@@ -475,44 +488,6 @@ const EVENTS      = [
     "loc": "",
     "notes": "",
     "status": "plan",
-    "isSplit": false,
-    "isRejoin": false
-  },
-  {
-    "name": "Venas di Cadore泊2/3",
-    "dt": "2026-09-17T18:00",
-    "dtEnd": "2026-09-18T07:00",
-    "srcTZ": 2,
-    "members": [
-      "そうし",
-      "だいちゃん",
-      "りょうじ"
-    ],
-    "groupTags": [
-      "山登り(3)"
-    ],
-    "loc": "",
-    "notes": "",
-    "status": "ok",
-    "isSplit": false,
-    "isRejoin": false
-  },
-  {
-    "name": "Venas di Cadore泊1/3",
-    "dt": "2026-09-17T18:00",
-    "dtEnd": "2026-09-19T07:00",
-    "srcTZ": 2,
-    "members": [
-      "そうし",
-      "だいちゃん",
-      "りょうじ"
-    ],
-    "groupTags": [
-      "山登り(3)"
-    ],
-    "loc": "",
-    "notes": "",
-    "status": "ok",
     "isSplit": false,
     "isRejoin": false
   },
@@ -542,7 +517,7 @@ const EVENTS      = [
   },
   {
     "name": "バルセロナ泊2/2",
-    "dt": "2026-09-18T18:00",
+    "dt": "2026-09-18T20:00",
     "dtEnd": "2026-09-19T07:00",
     "srcTZ": 2,
     "members": [
@@ -563,8 +538,8 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
-    "name": "Venas di Cadore泊3/3",
-    "dt": "2026-09-18T18:00",
+    "name": "Venas di Cadore泊2/3",
+    "dt": "2026-09-18T20:00",
     "dtEnd": "2026-09-19T07:00",
     "srcTZ": 2,
     "members": [
@@ -628,6 +603,25 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
+    "name": "Venas di Cadore泊3/3",
+    "dt": "2026-09-19T20:00",
+    "dtEnd": "2026-09-21T07:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん",
+      "りょうじ"
+    ],
+    "groupTags": [
+      "山登り(3)"
+    ],
+    "loc": "",
+    "notes": "",
+    "status": "ok",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
     "name": "ヴェネツィア → パリ",
     "dt": "2026-09-20T14:55",
     "dtEnd": "2026-09-20T16:40",
@@ -648,7 +642,7 @@ const EVENTS      = [
   },
   {
     "name": "パリ泊2/3",
-    "dt": "2026-09-20T18:00",
+    "dt": "2026-09-20T20:00",
     "dtEnd": "2026-09-21T07:00",
     "srcTZ": 2,
     "members": [
@@ -700,7 +694,7 @@ const EVENTS      = [
   },
   {
     "name": "パリ泊3/3",
-    "dt": "2026-09-21T18:00",
+    "dt": "2026-09-21T20:00",
     "dtEnd": "2026-09-22T07:00",
     "srcTZ": 2,
     "members": [
@@ -768,7 +762,7 @@ const EVENTS      = [
   },
   {
     "name": "プラハ泊",
-    "dt": "2026-09-22T18:00",
+    "dt": "2026-09-22T20:00",
     "dtEnd": "2026-09-23T07:00",
     "srcTZ": 2,
     "members": [
@@ -792,7 +786,7 @@ const EVENTS      = [
   },
   {
     "name": "ウィーン泊",
-    "dt": "2026-09-23T18:00",
+    "dt": "2026-09-23T20:00",
     "dtEnd": "2026-09-24T07:00",
     "srcTZ": 2,
     "members": [
@@ -881,30 +875,6 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
-    "name": "ザルツブルク泊",
-    "dt": "2026-09-24T18:00",
-    "dtEnd": "2026-09-25T07:00",
-    "srcTZ": 2,
-    "members": [
-      "おはる",
-      "なーちゃん",
-      "ほっぴー",
-      "たかし",
-      "せいや",
-      "もとや",
-      "りょうじ"
-    ],
-    "groupTags": [
-      "大多数(6)",
-      "りょうじ"
-    ],
-    "loc": "",
-    "notes": "",
-    "status": "plan",
-    "isSplit": false,
-    "isRejoin": false
-  },
-  {
     "name": "ハルシュタット→ザルツブルク",
     "dt": "2026-09-24T18:07",
     "dtEnd": "2026-09-24T19:52",
@@ -925,6 +895,30 @@ const EVENTS      = [
     "loc": "",
     "notes": "乗り継ぎあり",
     "status": "ok",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
+    "name": "ザルツブルク泊",
+    "dt": "2026-09-24T20:00",
+    "dtEnd": "2026-09-25T07:00",
+    "srcTZ": 2,
+    "members": [
+      "おはる",
+      "なーちゃん",
+      "ほっぴー",
+      "たかし",
+      "せいや",
+      "もとや",
+      "りょうじ"
+    ],
+    "groupTags": [
+      "大多数(6)",
+      "りょうじ"
+    ],
+    "loc": "",
+    "notes": "",
+    "status": "plan",
     "isSplit": false,
     "isRejoin": false
   },
@@ -978,7 +972,7 @@ const EVENTS      = [
   },
   {
     "name": "ミュンヘン泊2/2",
-    "dt": "2026-09-26T18:00",
+    "dt": "2026-09-26T20:00",
     "dtEnd": "2026-09-27T07:00",
     "srcTZ": 2,
     "members": [
@@ -1069,17 +1063,17 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-06-30T16:06:17.613Z";
+const UPDATED_AT  = "2026-06-30T17:02:40.568Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
    オーストリア・ドイツ → (ベトナム経由) → 大阪。9月は欧州はサマータイム中なので
    CEST(UTC+2)のみで足りる（CETは使わない）。 */
 const TZS = [
-  { id:"JST",  flag:"🇯🇵", abbr:"JST",  place:"大阪",     utc:"+9", offset:9 },
-  { id:"CST",  flag:"🇨🇳", abbr:"CST",  place:"上海",     utc:"+8", offset:8 },
-  { id:"CEST", flag:"🇪🇺", abbr:"CEST", place:"EU", utc:"+2", offset:2 },
-  { id:"ICT",  flag:"🇻🇳", abbr:"ICT",  place:"ベトナム",  utc:"+7", offset:7 },
+  { id:"JST",  flag:"🇯🇵", abbr:"JST",  offset:9 },
+  { id:"CST",  flag:"🇨🇳", abbr:"CST",  offset:8 },
+  { id:"CEST", flag:"🇪🇺", abbr:"CEST", offset:2 },
+  { id:"ICT",  flag:"🇻🇳", abbr:"ICT",  offset:7 },
 ];
 const WDAYS = ["日","月","火","水","木","金","土"];
 const COUNT_BADGE_THRESHOLD = 5; /* この人数以上は名前列挙ではなく人数表示に切替える */
@@ -1105,8 +1099,6 @@ function toConv(isoLocal, fromOff, toOff){
     dateStr:`${D.getUTCFullYear()}-${p2(D.getUTCMonth()+1)}-${p2(D.getUTCDate())}`,
     timeStr:`${p2(D.getUTCHours())}:${p2(D.getUTCMinutes())}`,
     ms:tMs,
-    srcDay:d, tgtDay:D.getUTCDate(),
-    srcMo:mo, tgtMo:D.getUTCMonth()+1,
   };
 }
 
@@ -1146,12 +1138,10 @@ function renderListHtml(byDate){
     html += `<div class="dt-sec">
       <div class="dt-head">
         📅 ${fmtDate(dateKey)}
-        <span class="dt-tz">${selTZ.flag} ${selTZ.abbr}（${selTZ.place}）基準</span>
+        <span class="dt-tz">${selTZ.flag} ${selTZ.abbr}基準</span>
       </div>`;
 
     for(const ev of evs){
-      const dayShift = ev.conv.tgtDay - ev.conv.srcDay
-                    + (ev.conv.tgtMo  - ev.conv.srcMo)*30;  /* approx */
       const badge = badgeInfo(ev);
 
       /* split/rejoin banner */
@@ -1164,7 +1154,6 @@ function renderListHtml(byDate){
         <div class="ev-time">
           <div class="ev-t">${ev.conv.timeStr}</div>
           ${ev.convEnd ? `<div class="ev-t-end">〜${ev.convEnd.timeStr}</div>` : ""}
-          ${dayShift>0 ? `<div class="ev-shift">翌日</div>` : dayShift<0 ? `<div class="ev-shift prev">前日</div>` : ""}
         </div>
         <div class="ev-line"></div>
         <div class="ev-card">
@@ -1245,9 +1234,7 @@ function render(){
   /* stats */
   const nAll  = filtered.filter(e=>(e.members||[]).length===ALL_MEMBERS.length).length;
   const nSub  = filtered.length - nAll;
-  const nDays = byDate.size;
   document.getElementById("stats").innerHTML = `
-    <div class="stat"><div class="stat-n">${nDays}</div><div class="stat-l">日間</div></div>
     <div class="stat"><div class="stat-n">${nAll}</div><div class="stat-l">全員予定</div></div>
     <div class="stat"><div class="stat-n">${nSub}</div><div class="stat-l">サブグループ予定</div></div>
   `;
@@ -1284,7 +1271,7 @@ TZS.forEach(tz=>{
   const btn = document.createElement("button");
   btn.className = "tz-btn" + (tz.id===selTZ.id?" on":"");
   btn.setAttribute("aria-pressed", tz.id===selTZ.id);
-  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span><span class="tz-place">（${tz.place}）</span><span class="tz-utc">UTC${tz.utc}</span>`;
+  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span>`;
   btn.addEventListener("click",()=>{
     selTZ = tz;
     document.querySelectorAll(".tz-btn").forEach(b=>{
