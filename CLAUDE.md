@@ -50,7 +50,7 @@ All rendering logic lives inline in a `<script>` tag at the bottom of the HTML �
 
 ## Customization conventions
 
-- Trip name: edit `TRIP_NAME` constant in `template.html`.
+- Trip name: edit the `<title>` and `.hdr-title` text directly in `template.html` (no JS constant — it's static markup).
 - Adding/removing a participant from the trip: edit `ALL_MEMBERS` in `generate.js` (single source — flows into both the roster injected into `template.html` and member-filter UI).
 - Who attends a given event: set the `参加メンバー` multi-select on that event's Notion row — no code change needed.
 - Sync frequency: change the `cron` expression in `.github/workflows/sync.yml`.
