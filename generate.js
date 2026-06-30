@@ -9,6 +9,13 @@ const path  = require("path");
 const TOKEN       = process.env.NOTION_TOKEN;
 const DATABASE_ID = "d12b01ae-a4db-44c0-a903-c8a1c01e511e"; // 旅程データベース
 
+// 旅行全体のメンバー名簿。ここを1箇所変更するだけで「全員」判定・人数表示・
+// メンバーフィルターの選択肢すべてに反映される（仮名、後で実名に置き換え予定）。
+const ALL_MEMBERS = [
+  "メンバー1", "メンバー2", "メンバー3", "メンバー4", "メンバー5",
+  "メンバー6", "メンバー7", "メンバー8", "メンバー9", "メンバー10",
+];
+
 if (!TOKEN) {
   console.error("❌  NOTION_TOKEN が設定されていません");
   console.error("    export NOTION_TOKEN=secret_xxx && node generate.js");
@@ -74,22 +81,15 @@ async function fetchAllPages() {
 
 /* ──────────── データ変換 ──────────── */
 
-const getTitle  = p => p?.title?.[0]?.plain_text       ?? "";
-const getText   = p => p?.rich_text?.[0]?.plain_text   ?? "";
-const getSelect = p => p?.select?.name                 ?? "";
-const getDate   = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
+const getTitle      = p => p?.title?.[0]?.plain_text       ?? "";
+const getText       = p => p?.rich_text?.[0]?.plain_text   ?? "";
+const getSelect     = p => p?.select?.name                 ?? "";
+const getMultiSelect = p => (p?.multi_select ?? []).map(o => o.name);
+const getDate       = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
 
 function parseOffset(tzStr) {
   const m = (tzStr ?? "").match(/UTC([+-])(\d+)/);
   return m ? (m[1] === "+" ? +m[2] : -m[2]) : 9; // デフォルトJST
-}
-
-function groupCode(s) {
-  if (s.includes("全員"))    return "all";
-  if (s.includes("Aチーム")) return "a";
-  if (s.includes("Bチーム")) return "b";
-  if (s.includes("Cチーム")) return "c";
-  return "all";
 }
 
 function statusCode(s) {
@@ -105,13 +105,14 @@ function toEvent(page) {
   return {
     name,
     dt,
-    srcTZ:    parseOffset(getSelect(p["タイムゾーン"])),
-    group:    groupCode(getSelect(p["グループ"])),
-    loc:      getText(p["場所"]),
-    notes:    getText(p["メモ"]),
-    status:   statusCode(getSelect(p["ステータス"])),
-    isSplit:  name.includes("分岐"),
-    isRejoin: name.includes("再合流"),
+    srcTZ:     parseOffset(getSelect(p["タイムゾーン"])),
+    members:   getMultiSelect(p["参加メンバー"]),
+    teamLabel: getText(p["チーム表示名"]),
+    loc:       getText(p["場所"]),
+    notes:     getText(p["メモ"]),
+    status:    statusCode(getSelect(p["ステータス"])),
+    isSplit:   name.includes("分岐"),
+    isRejoin:  name.includes("再合流"),
   };
 }
 
@@ -133,8 +134,9 @@ async function main() {
 
   const updatedAt = new Date().toISOString();
   const html = fs.readFileSync(tmplPath, "utf8")
-    .replace("/* __EVENTS_JSON__ */", JSON.stringify(events, null, 2))
-    .replace("/* __UPDATED_AT__ */",  JSON.stringify(updatedAt));
+    .replace("/* __EVENTS_JSON__ */",  JSON.stringify(events, null, 2))
+    .replace("/* __MEMBERS_JSON__ */", JSON.stringify(ALL_MEMBERS))
+    .replace("/* __UPDATED_AT__ */",   JSON.stringify(updatedAt));
 
   fs.writeFileSync(outPath, html, "utf8");
   console.log(`📄  index.html を生成しました (${(html.length / 1024).toFixed(1)} kB)`);
