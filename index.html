@@ -46,8 +46,16 @@ body{
   padding:14px 16px 10px;
   position:sticky; top:0; z-index:20;
 }
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .hdr-meta{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
 .hdr-title{font-size:17px;font-weight:700;margin-bottom:10px;line-height:1}
+.hdr-edit-btn{
+  flex-shrink:0;display:flex;align-items:center;gap:4px;
+  padding:6px 11px;border-radius:var(--r);
+  border:1px solid var(--gold-brd);background:var(--gold-bg);color:var(--gold);
+  font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;
+}
+.hdr-edit-btn:hover{background:rgba(240,160,32,.22)}
 .tz-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 
 .tz-btn{
@@ -65,6 +73,7 @@ body{
 }
 .tz-btn:hover:not(.on){border-color:var(--brd-hi);color:var(--text)}
 .tz-abbr{font-weight:600}
+.tz-place{font-size:11px;opacity:.85}
 .tz-utc{font-size:10px;opacity:.6}
 
 .diff-pill{
@@ -88,6 +97,28 @@ body{
 }
 .grp-btn.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
 .grp-btn:hover:not(.on){border-color:var(--brd-hi)}
+
+/* view switch (list / calendar) */
+.view-row{display:flex;gap:6px;margin-bottom:14px}
+
+/* calendar view */
+.cal-month{margin-bottom:20px}
+.cal-month-head{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-wd{font-size:10px;color:var(--text3);text-align:center;padding-bottom:2px}
+.cal-cell{
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
+  min-height:56px;padding:3px;display:flex;flex-direction:column;gap:2px;
+}
+.cal-cell.empty{background:transparent;border-color:transparent}
+.cal-cell-noev{opacity:.5}
+.cal-date{font-size:10px;font-weight:600;color:var(--text2)}
+.cal-ev{
+  font-size:9px;line-height:1.3;padding:1px 3px;border-radius:4px;
+  background:var(--s3);color:var(--text2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cal-ev.g-all{background:var(--g-all-bg);color:var(--g-all-tx)}
 
 /* date section */
 .dt-sec{margin-bottom:18px}
@@ -172,6 +203,9 @@ footer a:hover{text-decoration:underline}
   .hdr-title{font-size:15px}
   .stats{grid-template-columns:1fr 1fr}
   .stats .stat:last-child{grid-column:1/-1}
+  .hdr-edit-btn{font-size:11px;padding:5px 9px}
+  .cal-cell{min-height:44px;padding:2px}
+  .cal-ev{font-size:8px}
 }
 
 /* print */
@@ -184,15 +218,22 @@ footer a:hover{text-decoration:underline}
 <body>
 
 <header class="hdr">
-  <div class="hdr-meta" id="trip-meta">GROUP TRAVEL · 2026</div>
-  <h1 class="hdr-title">🌍 旅程しおり</h1>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-meta" id="trip-meta">GROUP TRAVEL · 2026</div>
+      <h1 class="hdr-title">🌍 旅程しおり</h1>
+    </div>
+    <a class="hdr-edit-btn" href="https://app.notion.com/p/38eea09ee62c8166ad9af49457cc809f" target="_blank" rel="noopener">✏️ 編集</a>
+  </div>
   <div class="tz-row" id="tz-row"></div>
 </header>
 
 <main class="main">
   <div class="stats" id="stats"></div>
   <div class="grp-row" id="grp-row"></div>
+  <div class="view-row" id="view-row"></div>
   <div id="timeline"></div>
+  <div id="calendar"></div>
 </main>
 
 <footer>
@@ -208,7 +249,7 @@ footer a:hover{text-decoration:underline}
 /* ── データ (generate.js が自動書き換え) ── */
 /*
   event: { name, dt, srcTZ, members:[参加メンバー名,...], teamLabel:任意の表示ラベル, loc, notes, status, isSplit, isRejoin }
-  srcTZ: UTC offset (number) 例: JST=9, CEST=2, CET=1, UTC=0
+  srcTZ: UTC offset (number) 例: 大阪(JST)=9, 上海(CST)=8, ヨーロッパ(CEST)=2, ベトナム(ICT)=7
   status: "ok"=確定, "plan"=計画中
 */
 const EVENTS      = [
@@ -259,7 +300,7 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
-    "name": "ヴ���ネツィア → パリ",
+    "name": "ヴェネツィア → パリ",
     "dt": "2026-09-20T15:00",
     "srcTZ": 2,
     "members": [
@@ -287,24 +328,29 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-06-30T03:43:07.463Z";
+const UPDATED_AT  = "2026-06-30T04:06:09.437Z";
 
 /* ── 設定 ── */
 const TRIP_NAME = "グループ旅行 2026";
 
 /* ── 定数 ── */
+/* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
+   オーストリア・ドイツ → (ベトナム経由) → 大阪。9月は欧州はサマータイム中なので
+   CEST(UTC+2)のみで足りる（CETは使わない）。 */
 const TZS = [
-  { id:"JST",  flag:"🇯🇵", abbr:"JST",  utc:"+9",  offset:9  },
-  { id:"CEST", flag:"🌍",  abbr:"CEST", utc:"+2",  offset:2  },
-  { id:"CET",  flag:"🌍",  abbr:"CET",  utc:"+1",  offset:1  },
-  { id:"UTC",  flag:"🌐",  abbr:"UTC",  utc:"±0",  offset:0  },
+  { id:"JST",  flag:"🇯🇵", abbr:"JST",  place:"大阪",     utc:"+9", offset:9 },
+  { id:"CST",  flag:"🇨🇳", abbr:"CST",  place:"上海",     utc:"+8", offset:8 },
+  { id:"CEST", flag:"🇪🇺", abbr:"CEST", place:"ヨーロッパ", utc:"+2", offset:2 },
+  { id:"ICT",  flag:"🇻🇳", abbr:"ICT",  place:"ベトナム",  utc:"+7", offset:7 },
 ];
+function zoneForOffset(off){ return TZS.find(z=>z.offset===off); }
 const WDAYS = ["日","月","火","水","木","金","土"];
 const COUNT_BADGE_THRESHOLD = 5; /* この人数以上は名前列挙ではなく人数表示に切替える */
 
 /* ── 状態 ── */
 let selTZ     = TZS[0];  /* default: JST */
 let selMember = null;    /* null = 全予定表示, それ以外はメンバー名 */
+let view      = "list";  /* "list" | "calendar" */
 
 /* ── ユーティリティ ── */
 function p2(n){ return String(n).padStart(2,"0") }
@@ -342,6 +388,85 @@ function badgeInfo(ev){
   return { cls:"g-team", label: esc(members.join("・")) || "—" };
 }
 
+/* ─────────── RENDER: リスト ─────────── */
+function renderListHtml(byDate){
+  let html = "";
+  for(const [dateKey, evs] of byDate){
+    html += `<div class="dt-sec">
+      <div class="dt-head">
+        📅 ${fmtDate(dateKey)}
+        <span class="dt-tz">${selTZ.flag} ${selTZ.abbr}（${selTZ.place}）基準</span>
+      </div>`;
+
+    for(const ev of evs){
+      const showSrc = ev.srcTZ !== selTZ.offset;
+      const srcZone = zoneForOffset(ev.srcTZ);
+      const srcLabel = srcZone ? srcZone.place : `UTC+${ev.srcTZ}`;
+      const dayShift = ev.conv.tgtDay - ev.conv.srcDay
+                    + (ev.conv.tgtMo  - ev.conv.srcMo)*30;  /* approx */
+      const badge = badgeInfo(ev);
+
+      /* split/rejoin banner */
+      let banner = "";
+      if(ev.isSplit)  banner = `<div class="split-banner">↙↘ ここでグループが分岐します</div>`;
+      if(ev.isRejoin) banner = `<div class="split-banner">↗↖ 全員が再合流します！</div>`;
+
+      html += banner + `
+      <div class="ev">
+        <div class="ev-time">
+          <div class="ev-t">${ev.conv.timeStr}</div>
+          ${showSrc ? `<div class="ev-src">元${esc(srcLabel)}</div>` : ""}
+          ${dayShift>0 ? `<div class="ev-shift">翌日</div>` : dayShift<0 ? `<div class="ev-shift prev">前日</div>` : ""}
+        </div>
+        <div class="ev-line"></div>
+        <div class="ev-card">
+          <div class="badges">
+            <span class="badge ${badge.cls}">${badge.label}</span>
+            <span class="${ev.status==="ok"?"st-ok":"st-ng"}">${ev.status==="ok"?"✅ 確定":"📝 計画中"}</span>
+          </div>
+          <div class="ev-name">${esc(ev.name)}</div>
+          ${ev.loc ? `<div class="ev-loc">${esc(ev.loc)}</div>` : ""}
+        </div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  }
+  return html;
+}
+
+/* ─────────── RENDER: カレンダー ─────────── */
+function renderCalendarHtml(byDate){
+  /* 出現する年月ごとにグリッドを作る */
+  const months = [...new Set([...byDate.keys()].map(k=>k.slice(0,7)))].sort();
+
+  let html = "";
+  for(const ym of months){
+    const [y,mo] = ym.split("-").map(Number);
+    const firstWd     = new Date(Date.UTC(y,mo-1,1)).getUTCDay();
+    const daysInMonth = new Date(Date.UTC(y,mo,0)).getUTCDate();
+
+    html += `<div class="cal-month">
+      <div class="cal-month-head">${y}年${mo}月</div>
+      <div class="cal-grid">`;
+    html += WDAYS.map(w=>`<div class="cal-wd">${w}</div>`).join("");
+    for(let i=0;i<firstWd;i++) html += `<div class="cal-cell empty"></div>`;
+    for(let d=1; d<=daysInMonth; d++){
+      const dateKey = `${y}-${p2(mo)}-${p2(d)}`;
+      const evs = byDate.get(dateKey) || [];
+      html += `<div class="cal-cell${evs.length?"":" cal-cell-noev"}">
+        <div class="cal-date">${d}</div>
+        ${evs.map(ev=>{
+          const badge = badgeInfo(ev);
+          return `<div class="cal-ev ${badge.cls}" title="${esc(ev.name)}">${ev.conv.timeStr} ${esc(ev.name)}</div>`;
+        }).join("")}
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+  return html;
+}
+
 /* ─────────── RENDER ─────────── */
 function render(){
   /* filter + process */
@@ -368,54 +493,20 @@ function render(){
     <div class="stat"><div class="stat-n">${nSub}</div><div class="stat-l">サブグループ予定</div></div>
   `;
 
-  /* timeline */
+  const timelineEl = document.getElementById("timeline");
+  const calendarEl = document.getElementById("calendar");
+  timelineEl.style.display = view==="list" ? "" : "none";
+  calendarEl.style.display = view==="calendar" ? "" : "none";
+
   if(filtered.length===0){
-    document.getElementById("timeline").innerHTML = `<div class="empty">予定がありません</div>`;
+    const emptyHtml = `<div class="empty">予定がありません</div>`;
+    timelineEl.innerHTML = emptyHtml;
+    calendarEl.innerHTML = emptyHtml;
     return;
   }
 
-  let html = "";
-  for(const [dateKey, evs] of byDate){
-    html += `<div class="dt-sec">
-      <div class="dt-head">
-        📅 ${fmtDate(dateKey)}
-        <span class="dt-tz">${selTZ.flag} ${selTZ.abbr}基準</span>
-      </div>`;
-
-    for(const ev of evs){
-      const showSrc = ev.srcTZ !== selTZ.offset;
-      const dayShift = ev.conv.tgtDay - ev.conv.srcDay
-                    + (ev.conv.tgtMo  - ev.conv.srcMo)*30;  /* approx */
-      const badge = badgeInfo(ev);
-
-      /* split/rejoin banner */
-      let banner = "";
-      if(ev.isSplit)  banner = `<div class="split-banner">↙↘ ここでグループが分岐します</div>`;
-      if(ev.isRejoin) banner = `<div class="split-banner">↗↖ 全員が再合流します！</div>`;
-
-      html += banner + `
-      <div class="ev">
-        <div class="ev-time">
-          <div class="ev-t">${ev.conv.timeStr}</div>
-          ${showSrc ? `<div class="ev-src">元UTC+${ev.srcTZ}</div>` : ""}
-          ${dayShift>0 ? `<div class="ev-shift">翌日</div>` : dayShift<0 ? `<div class="ev-shift prev">前日</div>` : ""}
-        </div>
-        <div class="ev-line"></div>
-        <div class="ev-card">
-          <div class="badges">
-            <span class="badge ${badge.cls}">${badge.label}</span>
-            <span class="${ev.status==="ok"?"st-ok":"st-ng"}">${ev.status==="ok"?"✅ 確定":"📝 計画中"}</span>
-          </div>
-          <div class="ev-name">${esc(ev.name)}</div>
-          ${ev.loc ? `<div class="ev-loc">${esc(ev.loc)}</div>` : ""}
-        </div>
-      </div>`;
-    }
-
-    html += `</div>`;
-  }
-
-  document.getElementById("timeline").innerHTML = html;
+  if(view==="list") timelineEl.innerHTML = renderListHtml(byDate);
+  else              calendarEl.innerHTML = renderCalendarHtml(byDate);
 }
 
 /* ─────────── INIT ─────────── */
@@ -435,7 +526,7 @@ TZS.forEach(tz=>{
   const btn = document.createElement("button");
   btn.className = "tz-btn" + (tz.id===selTZ.id?" on":"");
   btn.setAttribute("aria-pressed", tz.id===selTZ.id);
-  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span><span class="tz-utc">UTC${tz.utc}</span>`;
+  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span><span class="tz-place">（${tz.place}）</span><span class="tz-utc">UTC${tz.utc}</span>`;
   btn.addEventListener("click",()=>{
     selTZ = tz;
     document.querySelectorAll(".tz-btn").forEach(b=>{
@@ -477,6 +568,24 @@ memberFilters.forEach(f=>{
     render();
   });
   grpRow.appendChild(btn);
+});
+
+/* 表示切替 (リスト / カレンダー) */
+const viewRow = document.getElementById("view-row");
+const VIEWS = [
+  { id:"list",     label:"📋 リスト" },
+  { id:"calendar", label:"📅 カレンダー" },
+];
+VIEWS.forEach(v=>{
+  const btn = document.createElement("button");
+  btn.className = "grp-btn view-btn" + (v.id===view?" on":"");
+  btn.textContent = v.label;
+  btn.addEventListener("click",()=>{
+    view = v.id;
+    document.querySelectorAll(".view-btn").forEach(b=>b.classList.toggle("on", b===btn));
+    render();
+  });
+  viewRow.appendChild(btn);
 });
 
 render();
