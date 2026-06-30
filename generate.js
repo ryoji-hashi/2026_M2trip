@@ -89,7 +89,8 @@ const getTitle      = p => p?.title?.[0]?.plain_text       ?? "";
 const getText       = p => p?.rich_text?.[0]?.plain_text   ?? "";
 const getSelect     = p => p?.select?.name                 ?? "";
 const getMultiSelect = p => (p?.multi_select ?? []).map(o => o.name);
-const getDate       = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
+const getDate    = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
+const getDateEnd = p => (p?.date?.end ?? "").slice(0, 16) || null; // Notionで終了日時を設定した場合のみ
 
 function parseOffset(tzStr) {
   const m = (tzStr ?? "").match(/UTC([+-])(\d+)/);
@@ -109,6 +110,7 @@ function toEvent(page) {
   return {
     name,
     dt,
+    dtEnd:     getDateEnd(p["日付（現地時間）"]),
     srcTZ:     parseOffset(getSelect(p["タイムゾーン"])),
     members:   getMultiSelect(p["参加メンバー"]),
     teamLabel: getText(p["チーム表示名"]),
