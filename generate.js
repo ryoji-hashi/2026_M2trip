@@ -16,6 +16,16 @@ const ALL_MEMBERS = [
   "ほっぴー", "もとや", "たかし", "そうし", "りょうじ",
 ];
 
+// Notionの「グループ」プロパティだけで参加メンバー・人数が自動的に決まるようにするための名簿。
+// ここに無いグループ名（例: ごんごんごん）が付いた行は、今まで通り
+// Notion側の「参加メンバー」を手入力する運用にフォールバックする。
+const GROUP_MEMBERS = {
+  "全員":     ALL_MEMBERS,
+  "大多数":   ["おはる", "なーちゃん", "ほっぴー", "たかし", "せいや", "もとや"],
+  "山登り":   ["そうし", "だいちゃん", "りょうじ"],
+  "ドイツ組": ["そうし", "だいちゃん"],
+};
+
 if (!TOKEN) {
   console.error("❌  NOTION_TOKEN が設定されていません");
   console.error("    export NOTION_TOKEN=secret_xxx && node generate.js");
@@ -101,19 +111,48 @@ function statusCode(s) {
   return (s.includes("確定") || s.includes("完了")) ? "ok" : "plan";
 }
 
+// 「大多数(6)」のような表記から末尾の "(N)" 人数表記を取り除く。
+function normalizeGroupTag(t) {
+  return String(t).replace(/[（(]\d+[）)]\s*$/, "").trim();
+}
+
+// グループタグ（例: ["大多数(6)", "りょうじ"]）から実際の参加メンバーを展開する。
+// 既知のグループ名はGROUP_MEMBERSの名簿に、個人名タグはその人自身に展開し、
+// 両方を合算する。一つも展開できなければ resolved:false を返し、呼び出し側で
+// Notionの「参加メンバー」への手入力にフォールバックする。
+function expandGroupTags(rawTags) {
+  const members = new Set();
+  let resolved = false;
+  for (const raw of rawTags) {
+    const tag = normalizeGroupTag(raw);
+    if (GROUP_MEMBERS[tag]) {
+      GROUP_MEMBERS[tag].forEach(m => members.add(m));
+      resolved = true;
+    } else if (ALL_MEMBERS.includes(tag)) {
+      members.add(tag);
+      resolved = true;
+    }
+  }
+  return { members: [...members], resolved };
+}
+
 function toEvent(page) {
   const p    = page.properties;
   const name = getTitle(p["予定名"]);
   const dt   = getDate(p["日付（現地時間）"]);
   if (!name || !dt) return null;
 
+  const groupTags = getMultiSelect(p["グループ"]);
+  const expanded  = expandGroupTags(groupTags);
+  const members   = expanded.resolved ? expanded.members : getMultiSelect(p["参加メンバー"]);
+
   return {
     name,
     dt,
     dtEnd:     getDateEnd(p["日付（現地時間）"]),
     srcTZ:     parseOffset(getSelect(p["タイムゾーン"])),
-    members:   getMultiSelect(p["参加メンバー"]),
-    groupTags: getMultiSelect(p["グループ"]),
+    members,
+    groupTags,
     loc:       getText(p["場所"]),
     notes:     getText(p["メモ"]),
     status:    statusCode(getSelect(p["ステータス"])),
