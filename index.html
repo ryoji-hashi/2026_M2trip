@@ -109,7 +109,6 @@ body{
   border-radius:var(--r);
   border:1px solid var(--border);
   background:var(--s2);color:var(--text3);
-  margin-left:auto;
 }
 
 /* ── main ── */
@@ -1108,7 +1107,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-06-30T17:32:22.163Z";
+const UPDATED_AT  = "2026-06-30T17:41:45.033Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1161,6 +1160,13 @@ function normalizeTag(t){ return String(t).replace(/[（(]\d+[）)]\s*$/, "").tr
 
 /* グループ絞り込みボタンの表示順。ここに無い新しいグループ名は末尾に追加される */
 const GROUP_ORDER = ["全員", "大多数", "山登り", "ドイツ組"];
+
+/* グループ間の包含関係: あるグループのメンバーが別グループに完全に含まれる場合、
+   そのグループで絞り込んだときに含む側のタグが付いた予定も一緒に表示する。
+   例: ドイツ組(だいちゃん・そうし) ⊂ 山登り(だいちゃん・そうし・りょうじ) */
+const GROUP_INCLUDES = {
+  "ドイツ組": ["山登り"],
+};
 
 /* 全イベントの groupTags から「グループ名」だけを抽出（個人名タグは参加メンバー扱いなので除外） */
 const GROUP_TAGS = [...new Set(
@@ -1290,7 +1296,9 @@ function render(){
       if (filterMode === "category") return selCategories.has(ev.category); /* カテゴリ絞り込みは「全員参加は常に表示」の対象外 */
       if ((ev.members||[]).length === ALL_MEMBERS.length) return true; /* 全員参加の予定は絞り込み中でも常に表示 */
       if (filterMode === "member") return (ev.members||[]).some(m => selMembers.has(m));
-      return (ev.groupTags||[]).map(normalizeTag).some(t => selGroups.has(t));
+      const matchGroups = new Set(selGroups);
+      selGroups.forEach(g => (GROUP_INCLUDES[g]||[]).forEach(t => matchGroups.add(t)));
+      return (ev.groupTags||[]).map(normalizeTag).some(t => matchGroups.has(t));
     })
     .sort((a,b)=>a.conv.ms-b.conv.ms);
 
