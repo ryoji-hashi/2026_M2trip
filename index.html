@@ -47,7 +47,7 @@ body{
 .hero{
   position:relative;
   height:200px;
-  background:var(--s1) url('assets/header.jpg') center/cover no-repeat;
+  background:var(--s1) url('assets/header.jpg') center 30%/cover no-repeat;
 }
 .hero::after{
   content:"";
@@ -67,7 +67,7 @@ body{
   padding:14px 16px 10px;
   position:sticky; top:0; z-index:20;
 }
-.hdr-top{display:flex;justify-content:flex-end;align-items:flex-start;gap:10px;margin-bottom:10px}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .hdr-edit-btn{
   flex-shrink:0;display:flex;align-items:center;gap:4px;
   padding:6px 11px;border-radius:var(--r);
@@ -246,10 +246,10 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <header class="hdr">
-  <div class="hdr-top">
+  <div class="hdr-row">
+    <div class="tz-row" id="tz-row"></div>
     <a class="hdr-edit-btn" href="https://app.notion.com/p/38eea09ee62c8166ad9af49457cc809f" target="_blank" rel="noopener">✏️ Notionで予定を編集</a>
   </div>
-  <div class="tz-row" id="tz-row"></div>
 </header>
 
 <main class="main">
@@ -365,7 +365,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-06-30T05:39:15.025Z";
+const UPDATED_AT  = "2026-06-30T05:43:44.750Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
