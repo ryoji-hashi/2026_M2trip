@@ -156,6 +156,7 @@ function toEvent(page) {
     srcTZ:     parseOffset(getSelect(p["タイムゾーン"])),
     members,
     groupTags,
+    category:  getSelect(p["カテゴリ"]),
     loc:       getText(p["場所"]),
     notes:     getText(p["メモ"]),
     status:    statusCode(getSelect(p["ステータス"])),
