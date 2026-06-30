@@ -25,6 +25,8 @@
   --gold:     #F0A020;
   --gold-bg:  rgba(240,160,32,.12);
   --gold-brd: rgba(240,160,32,.38);
+  --accent:   #3B82F6;
+  --accent-hover: #2563EB;
   /* groups */
   --g-all-bg:#1E1550; --g-all-tx:#9D8DF8; --g-all-bd:rgba(139,92,246,.35);
   /* status */
@@ -71,10 +73,11 @@ body{
 .hdr-edit-btn{
   flex-shrink:0;display:flex;align-items:center;gap:4px;
   padding:6px 11px;border-radius:var(--r);
-  border:1px solid var(--gold-brd);background:var(--gold-bg);color:var(--gold);
-  font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;
+  font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(59,130,246,.4);
 }
-.hdr-edit-btn:hover{background:rgba(240,160,32,.22)}
+.hdr-edit-btn:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
 .tz-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 
 .tz-btn{
@@ -155,7 +158,6 @@ body{
 .ev-time{text-align:right;padding-top:10px;min-height:40px}
 .ev-t{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.2}
 .ev-t-end{font-size:11px;font-weight:600;color:var(--text2);font-variant-numeric:tabular-nums;margin-top:1px}
-.ev-src{font-size:10px;color:var(--text3);margin-top:3px}
 .ev-shift{font-size:10px;margin-top:2px;color:var(--gold)}
 .ev-shift.prev{color:var(--text3)}
 .ev-line{background:var(--brd-hi);border-radius:1px;margin:6px 0}
@@ -297,7 +299,6 @@ const TZS = [
   { id:"CEST", flag:"🇪🇺", abbr:"CEST", place:"EU", utc:"+2", offset:2 },
   { id:"ICT",  flag:"🇻🇳", abbr:"ICT",  place:"ベトナム",  utc:"+7", offset:7 },
 ];
-function zoneForOffset(off){ return TZS.find(z=>z.offset===off); }
 const WDAYS = ["日","月","火","水","木","金","土"];
 const COUNT_BADGE_THRESHOLD = 5; /* この人数以上は名前列挙ではなく人数表示に切替える */
 
@@ -365,9 +366,6 @@ function renderListHtml(byDate){
       </div>`;
 
     for(const ev of evs){
-      const showSrc = ev.srcTZ !== selTZ.offset;
-      const srcZone = zoneForOffset(ev.srcTZ);
-      const srcLabel = srcZone ? srcZone.place : `UTC+${ev.srcTZ}`;
       const dayShift = ev.conv.tgtDay - ev.conv.srcDay
                     + (ev.conv.tgtMo  - ev.conv.srcMo)*30;  /* approx */
       const badge = badgeInfo(ev);
@@ -382,7 +380,6 @@ function renderListHtml(byDate){
         <div class="ev-time">
           <div class="ev-t">${ev.conv.timeStr}</div>
           ${ev.convEnd ? `<div class="ev-t-end">〜${ev.convEnd.timeStr}</div>` : ""}
-          ${showSrc ? `<div class="ev-src">元${esc(srcLabel)}</div>` : ""}
           ${dayShift>0 ? `<div class="ev-shift">翌日</div>` : dayShift<0 ? `<div class="ev-shift prev">前日</div>` : ""}
         </div>
         <div class="ev-line"></div>
@@ -447,6 +444,7 @@ function render(){
     }))
     .filter(ev => {
       if (!selFilter) return true;
+      if ((ev.members||[]).length === ALL_MEMBERS.length) return true; /* 全員参加の予定は絞り込み中でも常に表示 */
       if (selFilter.type === "member") return (ev.members||[]).includes(selFilter.value);
       return (ev.groupTags||[]).map(normalizeTag).includes(selFilter.value);
     })
