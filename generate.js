@@ -113,7 +113,7 @@ function toEvent(page) {
     dtEnd:     getDateEnd(p["日付（現地時間）"]),
     srcTZ:     parseOffset(getSelect(p["タイムゾーン"])),
     members:   getMultiSelect(p["参加メンバー"]),
-    teamLabel: getText(p["チーム表示名"]),
+    groupTags: getMultiSelect(p["グループ"]),
     loc:       getText(p["場所"]),
     notes:     getText(p["メモ"]),
     status:    statusCode(getSelect(p["ステータス"])),
