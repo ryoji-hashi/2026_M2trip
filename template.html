@@ -303,9 +303,11 @@ const WDAYS = ["日","月","火","水","木","金","土"];
 const COUNT_BADGE_THRESHOLD = 5; /* この人数以上は名前列挙ではなく人数表示に切替える */
 
 /* ── 状態 ── */
-let selTZ     = TZS[0];  /* default: JST */
-let selFilter = null;    /* null = 全予定表示, それ以外は {type:"member"|"group", value} */
-let view      = "list";  /* "list" | "calendar" */
+let selTZ      = TZS[0];  /* default: JST */
+let filterMode = null;    /* null = 全予定表示, "member" | "group" のどちらかひとつ */
+let selMembers = new Set();  /* filterMode==="member" のとき選択中のメンバー名（複数可） */
+let selGroups  = new Set();  /* filterMode==="group"  のとき選択中のグループ名（複数可） */
+let view       = "list";  /* "list" | "calendar" */
 
 /* ── ユーティリティ ── */
 function p2(n){ return String(n).padStart(2,"0") }
@@ -443,10 +445,10 @@ function render(){
       convEnd: ev.dtEnd ? toConv(ev.dtEnd, ev.srcTZ, selTZ.offset) : null,
     }))
     .filter(ev => {
-      if (!selFilter) return true;
+      if (!filterMode) return true;
       if ((ev.members||[]).length === ALL_MEMBERS.length) return true; /* 全員参加の予定は絞り込み中でも常に表示 */
-      if (selFilter.type === "member") return (ev.members||[]).includes(selFilter.value);
-      return (ev.groupTags||[]).map(normalizeTag).includes(selFilter.value);
+      if (filterMode === "member") return (ev.members||[]).some(m => selMembers.has(m));
+      return (ev.groupTags||[]).map(normalizeTag).some(t => selGroups.has(t));
     })
     .sort((a,b)=>a.conv.ms-b.conv.ms);
 
@@ -526,30 +528,69 @@ pill.className = "diff-pill";
 pill.style.display = "none";
 tzRow.appendChild(pill);
 
-/* フィルターボタンの選択状態を selFilter に合わせて再計算する (メンバー行・グループ行共通) */
+/* フィルターボタンの選択状態を filterMode/selMembers/selGroups に合わせて再計算する (メンバー行・グループ行共通) */
 function syncFilterButtons(){
   document.querySelectorAll(".filter-btn").forEach(b=>{
-    const match = selFilter
-      ? (b.dataset.ftype===selFilter.type && b.dataset.fvalue===selFilter.value)
-      : (b.dataset.ftype==="");
-    b.classList.toggle("on", match);
+    const ftype = b.dataset.ftype;
+    let active;
+    if (ftype === "")       active = (filterMode === null);
+    else if (ftype === "member") active = (filterMode === "member" && selMembers.has(b.dataset.fvalue));
+    else                          active = (filterMode === "group"  && selGroups.has(b.dataset.fvalue));
+    b.classList.toggle("on", active);
   });
+}
+
+/* メンバー名タップ: 別モードから来た場合はそのメンバー単独選択でメンバーモードへ切替、
+   同じモード内ならそのメンバーをトグル（複数選択可）。選択が0件になったら「すべて」に戻る。 */
+function toggleMember(name){
+  if (filterMode !== "member") {
+    filterMode = "member";
+    selGroups.clear();
+    selMembers.clear();
+    selMembers.add(name);
+  } else {
+    if (selMembers.has(name)) selMembers.delete(name); else selMembers.add(name);
+    if (selMembers.size === 0) filterMode = null;
+  }
+}
+
+/* グループ名タップ: toggleMember と対称の挙動 */
+function toggleGroup(tag){
+  if (filterMode !== "group") {
+    filterMode = "group";
+    selMembers.clear();
+    selGroups.clear();
+    selGroups.add(tag);
+  } else {
+    if (selGroups.has(tag)) selGroups.delete(tag); else selGroups.add(tag);
+    if (selGroups.size === 0) filterMode = null;
+  }
 }
 
 /* メンバーフィルター (ALL_MEMBERS から動的生成、固定グループ定義を持たない) */
 const grpRow = document.getElementById("grp-row");
-const memberFilters = [
-  { type:null, value:"", label:"すべて" },
-  ...ALL_MEMBERS.map(m=>({ type:"member", value:m, label:m })),
-];
-memberFilters.forEach(f=>{
+const btnAll = document.createElement("button");
+btnAll.className = "grp-btn filter-btn";
+btnAll.dataset.ftype = "";
+btnAll.dataset.fvalue = "";
+btnAll.textContent = "すべて";
+btnAll.addEventListener("click",()=>{
+  filterMode = null;
+  selMembers.clear();
+  selGroups.clear();
+  syncFilterButtons();
+  render();
+});
+grpRow.appendChild(btnAll);
+
+ALL_MEMBERS.forEach(name=>{
   const btn = document.createElement("button");
   btn.className = "grp-btn filter-btn";
-  btn.dataset.ftype = f.type ?? "";
-  btn.dataset.fvalue = f.value;
-  btn.textContent = f.label;
+  btn.dataset.ftype = "member";
+  btn.dataset.fvalue = name;
+  btn.textContent = name;
   btn.addEventListener("click",()=>{
-    selFilter = f.type ? { type:f.type, value:f.value } : null;
+    toggleMember(name);
     syncFilterButtons();
     render();
   });
@@ -567,7 +608,7 @@ if (GROUP_TAGS.length) {
     btn.dataset.fvalue = tag;
     btn.textContent = tag;
     btn.addEventListener("click",()=>{
-      selFilter = { type:"group", value:tag };
+      toggleGroup(tag);
       syncFilterButtons();
       render();
     });
