@@ -133,10 +133,18 @@ async function main() {
   }
 
   const updatedAt = new Date().toISOString();
-  const html = fs.readFileSync(tmplPath, "utf8")
-    .replace("/* __EVENTS_JSON__ */",  JSON.stringify(events, null, 2))
-    .replace("/* __MEMBERS_JSON__ */", JSON.stringify(ALL_MEMBERS))
-    .replace("/* __UPDATED_AT__ */",   JSON.stringify(updatedAt));
+
+  // テンプレートの "/* __MARKER__ */<デフォルト値>" を丸ごとJSON値に置き換える。
+  // コメントだけでなく後ろのデフォルトリテラル（[] や null）まで含めて置換しないと
+  // 構文として壊れた式が残ってしまうため、次のセミコロンまでをまとめて消す。
+  function injectPlaceholder(html, marker, value) {
+    return html.replace(new RegExp(`/\\* ${marker} \\*/[^;]*`), JSON.stringify(value, null, 2));
+  }
+
+  let html = fs.readFileSync(tmplPath, "utf8");
+  html = injectPlaceholder(html, "__EVENTS_JSON__",  events);
+  html = injectPlaceholder(html, "__MEMBERS_JSON__", ALL_MEMBERS);
+  html = injectPlaceholder(html, "__UPDATED_AT__",   updatedAt);
 
   fs.writeFileSync(outPath, html, "utf8");
   console.log(`📄  index.html を生成しました (${(html.length / 1024).toFixed(1)} kB)`);
