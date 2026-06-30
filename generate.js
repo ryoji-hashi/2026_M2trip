@@ -97,7 +97,10 @@ async function fetchAllPages() {
 
 const getTitle      = p => p?.title?.[0]?.plain_text       ?? "";
 const getText       = p => p?.rich_text?.[0]?.plain_text   ?? "";
-const getSelect     = p => p?.select?.name                 ?? "";
+// Select型・Status型のどちらでも読めるようにする（Notion APIはプロパティの型によって
+// select.name / status.name と参照先キーが変わるため）。デフォルト値を設定できる
+// Status型に変更しても引き続き読み取れるようにするための互換対応。
+const getSelect     = p => p?.select?.name ?? p?.status?.name ?? "";
 const getMultiSelect = p => (p?.multi_select ?? []).map(o => o.name);
 const getDate    = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
 const getDateEnd = p => (p?.date?.end ?? "").slice(0, 16) || null; // Notionで終了日時を設定した場合のみ
