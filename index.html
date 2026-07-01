@@ -103,13 +103,9 @@ body{
 }
 .tz-btn:hover:not(.on){border-color:var(--brd-hi);color:var(--text)}
 .tz-abbr{font-weight:600}
-
-.diff-pill{
-  font-size:11px;padding:5px 10px;
-  border-radius:var(--r);
-  border:1px solid var(--border);
-  background:var(--s2);color:var(--text3);
-}
+/* 差分テキストはボタン内に常に存在しスペースを確保、active時のみ表示 */
+.tz-diff{font-size:10px;font-weight:400;opacity:0;transition:opacity .15s}
+.tz-btn.on .tz-diff{opacity:.8}
 
 /* ── main ── */
 .main{padding:14px 14px 0;max-width:640px;margin:0 auto}
@@ -228,7 +224,7 @@ footer a:hover{text-decoration:underline}
 
 /* mobile tweak */
 @media(max-width:400px){
-  .tz-btn{padding:6px 10px;font-size:12px}
+  .tz-btn{padding:6px 8px;font-size:12px}
   .hero{height:150px}
   .hero-title{font-size:17px}
   .fab{right:14px; bottom:14px; height:44px; min-width:44px}
@@ -1107,7 +1103,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-07-01T03:14:27.474Z";
+const UPDATED_AT  = "2026-07-01T05:26:31.868Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1366,33 +1362,22 @@ if(UPDATED_AT){
 const tzRow = document.getElementById("tz-row");
 TZS.forEach(tz=>{
   const btn = document.createElement("button");
+  const diff = tz.offset - 9;
+  const diffLabel = diff===0 ? "" : (diff>0?`+${diff}h`:`${diff}h`);
   btn.className = "tz-btn" + (tz.id===selTZ.id?" on":"");
   btn.setAttribute("aria-pressed", tz.id===selTZ.id);
-  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span>`;
+  /* 差分テキストを常にボタン内に含めることでスペースを確保し、opacity で表示/非表示を切り替える */
+  btn.innerHTML = `${tz.flag} <span class="tz-abbr">${tz.abbr}</span>${diffLabel?`<span class="tz-diff">${diffLabel}</span>`:""}`;
   btn.addEventListener("click",()=>{
     selTZ = tz;
     document.querySelectorAll(".tz-btn").forEach(b=>{
       b.classList.toggle("on", b===btn);
       b.setAttribute("aria-pressed", b===btn);
     });
-    /* diff pill */
-    const diff = tz.offset - 9;
-    const pill = document.getElementById("diff-pill");
-    if(pill){
-      pill.textContent = diff===0?"" : (diff>0?`+${diff}h`:`${diff}h`)+" (JST比)";
-      pill.style.visibility = diff===0?"hidden":"visible";
-    }
     render();
   });
   tzRow.appendChild(btn);
 });
-
-/* diff pill */
-const pill = document.createElement("span");
-pill.id = "diff-pill";
-pill.className = "diff-pill";
-pill.style.visibility = "hidden";
-tzRow.appendChild(pill);
 
 /* フィルターボタンの選択状態を filterMode/selMembers/selGroups/selCategories に合わせて再計算する (メンバー行・グループ行・カテゴリ行共通) */
 function syncFilterButtons(){
