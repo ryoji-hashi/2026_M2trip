@@ -868,7 +868,7 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
-    "name": "October fes",
+    "name": "October fest",
     "dt": "2026-09-24T09:00",
     "dtEnd": "2026-09-27T09:00",
     "srcTZ": 2,
@@ -1107,7 +1107,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-07-01T00:13:04.763Z";
+const UPDATED_AT  = "2026-07-01T03:14:27.474Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1343,7 +1343,7 @@ let fabExpanded = false;
 function setFabExpanded(expanded){
   fabExpanded = expanded;
   fab.classList.toggle("collapsed", !expanded);
-  fab.textContent = expanded ? "✏️ Notionで編集" : "＋";
+  fab.textContent = expanded ? "✏️ Notionで予定を編集" : "＋";
 }
 setFabExpanded(false);
 fab.addEventListener("click", ()=>{
@@ -1379,8 +1379,8 @@ TZS.forEach(tz=>{
     const diff = tz.offset - 9;
     const pill = document.getElementById("diff-pill");
     if(pill){
-      pill.textContent = diff===0?"JST基準" : (diff>0?`+${diff}h`:`${diff}h`)+" (JST比)";
-      pill.style.display = diff===0?"none":"";
+      pill.textContent = diff===0?"" : (diff>0?`+${diff}h`:`${diff}h`)+" (JST比)";
+      pill.style.visibility = diff===0?"hidden":"visible";
     }
     render();
   });
@@ -1391,7 +1391,7 @@ TZS.forEach(tz=>{
 const pill = document.createElement("span");
 pill.id = "diff-pill";
 pill.className = "diff-pill";
-pill.style.display = "none";
+pill.style.visibility = "hidden";
 tzRow.appendChild(pill);
 
 /* フィルターボタンの選択状態を filterMode/selMembers/selGroups/selCategories に合わせて再計算する (メンバー行・グループ行・カテゴリ行共通) */
