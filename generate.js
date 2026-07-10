@@ -93,6 +93,65 @@ async function fetchAllPages() {
   return pages;
 }
 
+/* ──────────── Notion API (GET) ──────────── */
+
+function notionGet(endpoint) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        hostname: "api.notion.com",
+        path:     endpoint,
+        method:   "GET",
+        headers: {
+          Authorization:    `Bearer ${TOKEN}`,
+          "Notion-Version": "2022-06-28",
+        },
+      },
+      res => {
+        const chunks = [];
+        res.on("data", c => chunks.push(c));
+        res.on("end", () => {
+          const raw = Buffer.concat(chunks).toString("utf8");
+          try {
+            const json = JSON.parse(raw);
+            if (json.object === "error") reject(new Error(`Notion: ${json.message}`));
+            else resolve(json);
+          } catch (e) {
+            reject(new Error(`JSON parse failed: ${raw.slice(0, 200)}`));
+          }
+        });
+      }
+    );
+    req.on("error", reject);
+    req.end();
+  });
+}
+
+async function fetchBlocks(pageId) {
+  try {
+    const res = await notionGet(`/v1/blocks/${pageId}/children?page_size=100`);
+    return (res.results || []).map(block => {
+      const type   = block.type;
+      const rtArr  = block[type]?.rich_text ?? [];
+      const text   = rtArr.map(r => r.plain_text).join("");
+      switch (type) {
+        case "paragraph":          return text ? { t: "p",     text } : null;
+        case "heading_1":          return text ? { t: "h1",    text } : null;
+        case "heading_2":          return text ? { t: "h2",    text } : null;
+        case "heading_3":          return text ? { t: "h3",    text } : null;
+        case "bulleted_list_item": return text ? { t: "li",    text } : null;
+        case "numbered_list_item": return text ? { t: "li",    text } : null;
+        case "to_do":              return text ? { t: "todo",  text, checked: block.to_do?.checked ?? false } : null;
+        case "quote":              return text ? { t: "quote", text } : null;
+        case "divider":            return { t: "hr" };
+        default:                   return text ? { t: "p",     text } : null;
+      }
+    }).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 /* ──────────── データ変換 ──────────── */
 
 const getTitle      = p => p?.title?.[0]?.plain_text       ?? "";
@@ -101,6 +160,7 @@ const getText       = p => p?.rich_text?.[0]?.plain_text   ?? "";
 // select.name / status.name と参照先キーが変わるため）。デフォルト値を設定できる
 // Status型に変更しても引き続き読み取れるようにするための互換対応。
 const getSelect     = p => p?.select?.name ?? p?.status?.name ?? "";
+const getUrl        = p => p?.url ?? "";
 const getMultiSelect = p => (p?.multi_select ?? []).map(o => o.name);
 const getDate    = p => (p?.date?.start ?? "").slice(0, 16); // "YYYY-MM-DDTHH:MM"
 const getDateEnd = p => (p?.date?.end ?? "").slice(0, 16) || null; // Notionで終了日時を設定した場合のみ
@@ -158,6 +218,7 @@ function toEvent(page) {
     groupTags,
     category:  getSelect(p["カテゴリ"]),
     loc:       getText(p["場所"]),
+    url:       getUrl(p["URL"]),
     notes:     getText(p["メモ"]),
     status:    statusCode(getSelect(p["ステータス"])),
     isSplit:   name.includes("分岐"),
@@ -170,9 +231,13 @@ function toEvent(page) {
 async function main() {
   console.log(`🔄  Notionからデータを取得中 (DB: ${DATABASE_ID})`);
 
-  const pages  = await fetchAllPages();
-  const events = pages.map(toEvent).filter(Boolean);
-  console.log(`✅  ${events.length} 件のイベントを取得`);
+  const pages = await fetchAllPages();
+  const valid = pages.map(page => ({ page, ev: toEvent(page) })).filter(e => e.ev !== null);
+  console.log(`✅  ${valid.length} 件のイベントを取得`);
+
+  console.log("📦  ページ本文を並列取得中...");
+  const blocksList = await Promise.all(valid.map(e => fetchBlocks(e.page.id)));
+  const events = valid.map(({ ev }, i) => ({ ...ev, content: blocksList[i] }));
 
   const tmplPath = path.resolve(__dirname, "template.html");
   const outPath  = path.resolve(__dirname, "index.html");
