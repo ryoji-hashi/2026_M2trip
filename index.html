@@ -180,6 +180,7 @@ body{
 .modal-todo{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:2px}
 .modal-quote{font-size:13px;color:var(--text3);border-left:3px solid var(--border);padding-left:10px;margin-bottom:6px;font-style:italic}
 .modal-hr{border:none;border-top:1px solid var(--border);margin:10px 0}
+.modal-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;word-break:break-all}
 
 /* view switch (list / calendar) */
 .view-row{display:flex;gap:6px;margin-bottom:14px}
@@ -519,156 +520,147 @@ const EVENTS      = [
     "content": [
       {
         "t": "p",
-        "text": "参考",
+        "html": "参考",
         "d": 0
       },
       {
         "t": "li",
-        "text": "https://newt.net/ita/mag-477420003",
+        "html": "<a href=\"https://newt.net/ita/mag-477420003\" target=\"_blank\" rel=\"noopener\">https://newt.net/ita/mag-477420003</a>",
         "d": 1
       },
       {
         "t": "p",
-        "text": "宿泊先",
+        "html": "宿泊先",
         "d": 0
       },
       {
         "t": "li",
-        "text": "https://www.airbnb.jp/trips/v1?confirmationCode=HMKKAR5A9Z&reservationType=STAY",
+        "html": "<a href=\"https://www.airbnb.jp/trips/v1?confirmationCode=HMKKAR5A9Z&reservationType=STAY\" target=\"_blank\" rel=\"noopener\">https://www.airbnb.jp/trips/v1?confirmationCode=HMKKAR5A9Z&amp;reservationType=STAY</a>",
         "d": 1
       },
       {
         "t": "li",
-        "text": "V. Roma, 27, 32040 Venas di Cadore BL, イタリア",
+        "html": "V. Roma, 27, 32040 Venas di Cadore BL, イタリア",
         "d": 1
       },
       {
         "t": "h1",
-        "text": "行き先",
+        "html": "行き先",
         "d": 0
       },
       {
         "t": "p",
-        "text": "ヴェネツィアからコルチナまで2h40m",
+        "html": "ヴェネツィアからコルチナまで2h40m",
         "d": 0
       },
       {
         "t": "h3",
-        "text": "day1",
+        "html": "day1",
         "d": 0
       },
       {
         "t": "li",
-        "text": "コルチナ西側(ちょい遠)",
+        "html": "コルチナ西側(ちょい遠)",
         "d": 0
       },
       {
         "t": "li",
-        "text": "サッソ・ポルドイ",
+        "html": "サッソ・ポルドイ",
         "d": 1
       },
       {
         "t": "li",
-        "text": "2~3時間くらい(ロープウェイ、歩きなど合わせて)",
+        "html": "2~3時間くらい(ロープウェイ、歩きなど合わせて)",
         "d": 2
       },
       {
         "t": "li",
-        "text": "コルチナから1h10mくらい",
+        "html": "コルチナから1h10mくらい",
         "d": 2
       },
       {
         "t": "li",
-        "text": "セチェダ",
+        "html": "セチェダ",
         "d": 1
       },
       {
         "t": "li",
-        "text": "1~2時間",
+        "html": "1~2時間",
         "d": 2
       },
       {
         "t": "li",
-        "text": "コルチナから1h45m",
+        "html": "コルチナから1h45m",
         "d": 2
       },
       {
         "t": "li",
-        "text": "セチェダ-サッソ・ポルドイは1h10m",
+        "html": "セチェダ-サッソ・ポルドイは1h10m",
         "d": 2
       },
       {
         "t": "h3",
-        "text": "day2",
+        "html": "day2",
         "d": 0
       },
       {
         "t": "li",
-        "text": "コルチナの東側",
+        "html": "コルチナの東側",
         "d": 0
       },
       {
         "t": "li",
-        "text": "ミズリーナ湖",
+        "html": "ミズリーナ湖",
         "d": 1
       },
       {
         "t": "li",
-        "text": "トレ・チーメ",
+        "html": "トレ・チーメ",
         "d": 1
       },
       {
         "t": "li",
-        "text": "トレッキング3~4時間",
+        "html": "トレッキング3~4時間",
         "d": 2
       },
       {
         "t": "li",
-        "text": "コルチナから45m",
+        "html": "コルチナから45m",
         "d": 2
       },
       {
         "t": "h3",
-        "text": "day3",
+        "html": "day3",
         "d": 0
       },
       {
         "t": "li",
-        "text": "コルチナの北側(遠い)",
+        "html": "コルチナの北側(遠い)",
         "d": 0
       },
       {
         "t": "li",
-        "text": "ブラーイエス湖",
+        "html": "ブラーイエス湖",
         "d": 1
       },
       {
         "t": "li",
-        "text": "コルチナ東側の残り",
+        "html": "コルチナ東側の残り",
         "d": 0
       },
       {
         "t": "li",
-        "text": "ソラピス湖",
+        "html": "ソラピス湖",
         "d": 1
       },
       {
         "t": "h2",
-        "text": "claudeのプラン",
+        "html": "claudeのプラン",
         "d": 0
       },
       {
         "t": "p",
-        "text": "内容が明確なので、すぐにプランを組みます。Notionのメモにある全スポットを4日間に配置してマップ付きで出します。プランが完成しました！",
-        "d": 1
-      },
-      {
-        "t": "hr",
-        "d": 1
-      },
-      {
-        "t": "h2",
-        "text": "📋 Notionメモ対照表",
+        "html": "内容が明確なので、すぐにプランを組みます。Notionのメモにある全スポットを4日間に配置してマップ付きで出します。プランが完成しました！",
         "d": 1
       },
       {
@@ -677,104 +669,7 @@ const EVENTS      = [
       },
       {
         "t": "h2",
-        "text": "📅 詳細スケジュール",
-        "d": 1
-      },
-      {
-        "t": "h3",
-        "text": "Day 1｜ヴェネツィア → ドロミテ西端から東へ縦断 → コルティナ",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "08:00 ヴェネツィアでレンタカー（AT車、要早期確保）を借りて出発。A27→SS51でドロミテへ北上、そこからSS242を西へ進みオルティゼイへ。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "10:30〜12:00 セチェダ（Secèda） — ゴンドラで2,518mの鋭い鋸歯状稜線へ。Odleの岩峰群が眼前に広がる大草原を1〜2時間散策。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "13:30〜15:30 サッソ・ポルドイ（Sasso Pordoi） — ロープウェイで2,950mへ。ドロミテの最高地点クラスからの360度パノラマ。2〜3時間。セチェダから1h10mのドライブ。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "17:00 コルティナ着・チェックイン。ルート全体がまさに「ドロミテ絵葉書ドライブ」。",
-        "d": 1
-      },
-      {
-        "t": "hr",
-        "d": 1
-      },
-      {
-        "t": "h3",
-        "text": "Day 2｜東エリア制覇 — ミズリーナ湖 ＋ トレ・チーメ ＋ カディニ",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "07:30 ミズリーナ湖 — 朝の静寂の中で湖畔1周40分。トレ・チーメが湖面に映る朝景色が最高。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "09:00〜13:00 トレ・チーメ・ディ・ラヴァレード ⚠️ 要事前予約（€40/台） — 1周10km・3〜4時間のループ。標高2,400m超の大絶景。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "14:00〜16:00 カディニ・ディ・ミスリーナ — Rifugio Auronzoから徒歩30〜45分。垂直の断崖に立つ展望台（評価4.9）からの絶景で締めくくり。",
-        "d": 1
-      },
-      {
-        "t": "hr",
-        "d": 1
-      },
-      {
-        "t": "h3",
-        "text": "Day 3｜北エリア＋東エリア残り — ブライエス湖 ＋ ソラピス湖ハイキング",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "07:00〜09:00 ブライエス湖（Lago di Braies） — コルティナから50分北上。早朝なら駐車場も空いており湖が最も静か。湖畔1周1時間＋ボートレンタルも◎。⚠️ 7/1〜9/15は一般車規制あり（今回9月中旬なら規制解除後）。prags.bzで駐車予約推奨。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "10:00〜15:00 ソラピス湖ハイキング — ブライエス湖から約1時間でコルティナ近郊の登山口へ。往復9km・4〜5時間。鎖場あり・ハイキングブーツ必須。エメラルドブルーの秘境湖が待つ、コルティナ随一の人気ルート（評価4.8）。",
-        "d": 1
-      },
-      {
-        "t": "hr",
-        "d": 1
-      },
-      {
-        "t": "h3",
-        "text": "Day 4｜コルティナ → （チンクェ・トッリ optional） → ヴェネツィア → パリ✈️",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "08:00〜10:00 チンクェ・トッリ（任意） — コルティナから15分。チェアリフト+軽いハイク2時間。体力・時間・フライト時刻次第で入れる「ボーナスステージ」（評価4.9）。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "10:00 コルティナ出発。A27で南下、ヴェネツィアへ2時間45分。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "13:00〜14:00 ヴェネツィア・マルコ・ポーロ空港でレンタカー返却。",
-        "d": 1
-      },
-      {
-        "t": "p",
-        "text": "16:00以降のパリCDG便を推奨（乗り継ぎ余裕を持たせるため14時台以降のチェックインが安心）。Air France・easyJet・Voloteaなど直行便多数。",
+        "html": "📋 Notionメモ対照表",
         "d": 1
       },
       {
@@ -783,7 +678,113 @@ const EVENTS      = [
       },
       {
         "t": "h2",
-        "text": "⚠️ 事前に絶対やること",
+        "html": "📅 詳細スケジュール",
+        "d": 1
+      },
+      {
+        "t": "h3",
+        "html": "Day 1｜ヴェネツィア → ドロミテ西端から東へ縦断 → コルティナ",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "08:00 ヴェネツィアでレンタカー（AT車、要早期確保）を借りて出発。A27→SS51でドロミテへ北上、そこからSS242を西へ進みオルティゼイへ。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "10:30〜12:00 セチェダ（Secèda） — ゴンドラで2,518mの鋭い鋸歯状稜線へ。Odleの岩峰群が眼前に広がる大草原を1〜2時間散策。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "13:30〜15:30 サッソ・ポルドイ（Sasso Pordoi） — ロープウェイで2,950mへ。ドロミテの最高地点クラスからの360度パノラマ。2〜3時間。セチェダから1h10mのドライブ。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "17:00 コルティナ着・チェックイン。ルート全体がまさに「ドロミテ絵葉書ドライブ」。",
+        "d": 1
+      },
+      {
+        "t": "hr",
+        "d": 1
+      },
+      {
+        "t": "h3",
+        "html": "Day 2｜東エリア制覇 — ミズリーナ湖 ＋ トレ・チーメ ＋ カディニ",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "07:30 ミズリーナ湖 — 朝の静寂の中で湖畔1周40分。トレ・チーメが湖面に映る朝景色が最高。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "09:00〜13:00 トレ・チーメ・ディ・ラヴァレード ⚠️ 要事前予約（€40/台） — 1周10km・3〜4時間のループ。標高2,400m超の大絶景。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "14:00〜16:00 カディニ・ディ・ミスリーナ — Rifugio Auronzoから徒歩30〜45分。垂直の断崖に立つ展望台（評価4.9）からの絶景で締めくくり。",
+        "d": 1
+      },
+      {
+        "t": "hr",
+        "d": 1
+      },
+      {
+        "t": "h3",
+        "html": "Day 3｜北エリア＋東エリア残り — ブライエス湖 ＋ ソラピス湖ハイキング",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "07:00〜09:00 ブライエス湖（Lago di Braies） — コルティナから50分北上。早朝なら駐車場も空いており湖が最も静か。湖畔1周1時間＋ボートレンタルも◎。⚠️ 7/1〜9/15は一般車規制あり（今回9月中旬なら規制解除後）。<a href=\"http://prags.bz/\" target=\"_blank\" rel=\"noopener\">prags.bz</a>で駐車予約推奨。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "10:00〜15:00 ソラピス湖ハイキング — ブライエス湖から約1時間でコルティナ近郊の登山口へ。往復9km・4〜5時間。鎖場あり・ハイキングブーツ必須。エメラルドブルーの秘境湖が待つ、コルティナ随一の人気ルート（評価4.8）。",
+        "d": 1
+      },
+      {
+        "t": "hr",
+        "d": 1
+      },
+      {
+        "t": "h3",
+        "html": "Day 4｜コルティナ → （チンクェ・トッリ optional） → ヴェネツィア → パリ✈️",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "08:00〜10:00 チンクェ・トッリ（任意） — コルティナから15分。チェアリフト+軽いハイク2時間。体力・時間・フライト時刻次第で入れる「ボーナスステージ」（評価4.9）。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "10:00 コルティナ出発。A27で南下、ヴェネツィアへ2時間45分。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "13:00〜14:00 ヴェネツィア・マルコ・ポーロ空港でレンタカー返却。",
+        "d": 1
+      },
+      {
+        "t": "p",
+        "html": "16:00以降のパリCDG便を推奨（乗り継ぎ余裕を持たせるため14時台以降のチェックインが安心）。Air France・easyJet・Voloteaなど直行便多数。",
+        "d": 1
+      },
+      {
+        "t": "hr",
+        "d": 1
+      },
+      {
+        "t": "h2",
+        "html": "⚠️ 事前に絶対やること",
         "d": 1
       }
     ]
@@ -1236,32 +1237,32 @@ const EVENTS      = [
     "content": [
       {
         "t": "li",
-        "text": "Prague Main Train Station",
+        "html": "Prague Main Train Station",
         "d": 0
       },
       {
         "t": "li",
-        "text": "https://maps.app.goo.gl/6XXBhxRezmEXjQcEA",
+        "html": "<a href=\"https://maps.app.goo.gl/6XXBhxRezmEXjQcEA\" target=\"_blank\" rel=\"noopener\">https://maps.app.goo.gl/6XXBhxRezmEXjQcEA</a>",
         "d": 1
       },
       {
         "t": "li",
-        "text": "google mapのリンク上に",
+        "html": "google mapのリンク上に",
         "d": 0
       },
       {
         "t": "p",
-        "text": "内容見れる？",
+        "html": "内容見れる？",
         "d": 0
       },
       {
         "t": "p",
-        "text": "宿泊先map",
+        "html": "宿泊先map",
         "d": 0
       },
       {
         "t": "p",
-        "text": "https://www.google.com/maps/place/U+P%C5%AFj%C4%8Dovny+6,+110+00+Nov%C3%A9+M%C4%9Bsto,+%E3%83%81%E3%82%A7%E3%82%B3/@50.084049,14.4307787,19.85z/data=!4m6!3m5!1s0x470b958515ee4ce7:0x9db0a97d15519291!8m2!3d50.0840516!4d14.4311314!16s%2Fg%2F11glvh8bcd!5m1!1e2?authuser=0&entry=ttu&g_ep=EgoyMDI2MDcwNy4wIKXMDSoASAFQAw%3D%3D",
+        "html": "<a href=\"https://www.google.com/maps/place/U+P%C5%AFj%C4%8Dovny+6,+110+00+Nov%C3%A9+M%C4%9Bsto,+%E3%83%81%E3%82%A7%E3%82%B3/@50.084049,14.4307787,19.85z/data=!4m6!3m5!1s0x470b958515ee4ce7:0x9db0a97d15519291!8m2!3d50.0840516!4d14.4311314!16s%2Fg%2F11glvh8bcd!5m1!1e2?authuser=0&entry=ttu&g_ep=EgoyMDI2MDcwNy4wIKXMDSoASAFQAw%3D%3D\" target=\"_blank\" rel=\"noopener\">https://www.google.com/maps/place/U+P%C5%AFj%C4%8Dovny+6,+110+00+Nov%C3%A9+M%C4%9Bsto,+%E3%83%81%E3%82%A7%E3%82%B3/@50.084049,14.4307787,19.85z/data=!4m6!3m5!1s0x470b958515ee4ce7:0x9db0a97d15519291!8m2!3d50.0840516!4d14.4311314!16s%2Fg%2F11glvh8bcd!5m1!1e2?authuser=0&amp;entry=ttu&amp;g_ep=EgoyMDI2MDcwNy4wIKXMDSoASAFQAw%3D%3D</a>",
         "d": 1
       }
     ]
@@ -1703,7 +1704,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-07-10T07:50:32.906Z";
+const UPDATED_AT  = "2026-07-10T07:55:00.397Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1958,13 +1959,13 @@ function openModal(ev){
     for(const b of ev.content){
       const ind = (b.d||0) * 16;
       switch(b.t){
-        case "p":     html += `<div class="modal-p"   style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h1":    html += `<div class="modal-h1"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h2":    html += `<div class="modal-h2"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h3":    html += `<div class="modal-h3"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "li":    html += `<div class="modal-li"  style="padding-left:${14 + ind}px">${esc(b.text)}</div>`; break;
-        case "todo":  html += `<div class="modal-todo" style="padding-left:${ind}px">${b.checked?"☑":"☐"} ${esc(b.text)}</div>`; break;
-        case "quote": html += `<div class="modal-quote" style="margin-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "p":     html += `<div class="modal-p"    style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h1":    html += `<div class="modal-h1"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h2":    html += `<div class="modal-h2"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h3":    html += `<div class="modal-h3"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "li":    html += `<div class="modal-li"   style="padding-left:${14 + ind}px">${b.html}</div>`; break;
+        case "todo":  html += `<div class="modal-todo" style="padding-left:${ind}px">${b.checked?"☑":"☐"} ${b.html}</div>`; break;
+        case "quote": html += `<div class="modal-quote" style="margin-left:${ind}px">${b.html}</div>`; break;
         case "hr":    html += `<hr class="modal-hr">`; break;
       }
     }
