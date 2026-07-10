@@ -122,6 +122,10 @@ body{
 }
 .grp-btn.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
 .grp-btn:hover:not(.on){border-color:var(--brd-hi)}
+.reset-row{margin-bottom:10px}
+.filter-btn-reset{padding:4px 14px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-family:inherit;cursor:pointer;transition:all .12s}
+.filter-btn-reset.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
+.filter-btn-reset:not(.on){border-style:dashed}
 
 /* view switch (list / calendar) */
 .view-row{display:flex;gap:6px;margin-bottom:14px}
@@ -255,6 +259,7 @@ footer a:hover{text-decoration:underline}
 <button type="button" class="fab collapsed" id="fab" aria-label="Notionで予定を編集"></button>
 
 <main class="main">
+  <div class="reset-row" id="reset-row"></div>
   <div class="filter-label">メンバー</div>
   <div class="grp-row" id="grp-row"></div>
   <div class="filter-label" id="group-label" style="display:none">グループ</div>
@@ -624,18 +629,20 @@ function toggleCategory(cat){
 
 /* メンバーフィルター (ALL_MEMBERS から動的生成、固定グループ定義を持たない) */
 const grpRow = document.getElementById("grp-row");
+const resetRow = document.getElementById("reset-row");
 const btnAll = document.createElement("button");
-btnAll.className = "grp-btn filter-btn";
+btnAll.type = "button";
+btnAll.className = "filter-btn filter-btn-reset";
 btnAll.dataset.ftype = "";
 btnAll.dataset.fvalue = "";
-btnAll.textContent = "すべて";
+btnAll.textContent = "すべての予定";
 btnAll.addEventListener("click",()=>{
   filterMode = null;
   clearOtherSelections(null);
   syncFilterButtons();
   render();
 });
-grpRow.appendChild(btnAll);
+resetRow.appendChild(btnAll);
 
 ALL_MEMBERS.forEach(name=>{
   const btn = document.createElement("button");
