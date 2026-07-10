@@ -305,7 +305,7 @@ const WDAYS = ["日","月","火","水","木","金","土"];
 const COUNT_BADGE_THRESHOLD = 5; /* この人数以上は名前列挙ではなく人数表示に切替える */
 
 /* ── 状態 ── */
-let selTZ      = TZS[0];  /* default: JST */
+let selTZ      = TZS[2];  /* default: CEST */
 let filterMode = null;    /* null = 全予定表示, "member" | "group" | "category" のいずれかひとつ */
 let selMembers    = new Set();  /* filterMode==="member"   のとき選択中のメンバー名（複数可） */
 let selGroups     = new Set();  /* filterMode==="group"    のとき選択中のグループ名（複数可） */
