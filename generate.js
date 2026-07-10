@@ -127,26 +127,36 @@ function notionGet(endpoint) {
   });
 }
 
-async function fetchBlocks(pageId) {
+async function fetchBlocks(blockId, depth) {
+  if (depth === undefined) depth = 0;
   try {
-    const res = await notionGet(`/v1/blocks/${pageId}/children?page_size=100`);
-    return (res.results || []).map(block => {
-      const type   = block.type;
-      const rtArr  = block[type]?.rich_text ?? [];
-      const text   = rtArr.map(r => r.plain_text).join("");
+    const res = await notionGet(`/v1/blocks/${blockId}/children?page_size=100`);
+    const results = [];
+    for (const block of (res.results || [])) {
+      const type  = block.type;
+      const rtArr = block[type]?.rich_text ?? [];
+      const text  = rtArr.map(r => r.plain_text).join("");
+      let item = null;
       switch (type) {
-        case "paragraph":          return text ? { t: "p",     text } : null;
-        case "heading_1":          return text ? { t: "h1",    text } : null;
-        case "heading_2":          return text ? { t: "h2",    text } : null;
-        case "heading_3":          return text ? { t: "h3",    text } : null;
-        case "bulleted_list_item": return text ? { t: "li",    text } : null;
-        case "numbered_list_item": return text ? { t: "li",    text } : null;
-        case "to_do":              return text ? { t: "todo",  text, checked: block.to_do?.checked ?? false } : null;
-        case "quote":              return text ? { t: "quote", text } : null;
-        case "divider":            return { t: "hr" };
-        default:                   return text ? { t: "p",     text } : null;
+        case "paragraph":          item = text ? { t: "p",     text, d: depth } : null; break;
+        case "heading_1":          item = text ? { t: "h1",    text, d: depth } : null; break;
+        case "heading_2":          item = text ? { t: "h2",    text, d: depth } : null; break;
+        case "heading_3":          item = text ? { t: "h3",    text, d: depth } : null; break;
+        case "bulleted_list_item": item = text ? { t: "li",    text, d: depth } : null; break;
+        case "numbered_list_item": item = text ? { t: "li",    text, d: depth } : null; break;
+        case "to_do":              item = text ? { t: "todo",  text, d: depth, checked: block.to_do?.checked ?? false } : null; break;
+        case "quote":              item = text ? { t: "quote", text, d: depth } : null; break;
+        case "divider":            item = { t: "hr", d: depth }; break;
+        default:                   item = text ? { t: "p",     text, d: depth } : null; break;
       }
-    }).filter(Boolean);
+      if (item) results.push(item);
+      // インデントされた子ブロックを再帰取得（深さ上限4）
+      if (block.has_children && depth < 4) {
+        const children = await fetchBlocks(block.id, depth + 1);
+        results.push(...children);
+      }
+    }
+    return results;
   } catch {
     return [];
   }

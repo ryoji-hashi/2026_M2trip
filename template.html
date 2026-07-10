@@ -608,14 +608,15 @@ function openModal(ev){
   if(ev.content && ev.content.length){
     html += `<div class="modal-body">`;
     for(const b of ev.content){
+      const ind = (b.d||0) * 16;
       switch(b.t){
-        case "p":     html += `<div class="modal-p">${esc(b.text)}</div>`; break;
-        case "h1":    html += `<div class="modal-h1">${esc(b.text)}</div>`; break;
-        case "h2":    html += `<div class="modal-h2">${esc(b.text)}</div>`; break;
-        case "h3":    html += `<div class="modal-h3">${esc(b.text)}</div>`; break;
-        case "li":    html += `<div class="modal-li">${esc(b.text)}</div>`; break;
-        case "todo":  html += `<div class="modal-todo">${b.checked?"☑":"☐"} ${esc(b.text)}</div>`; break;
-        case "quote": html += `<div class="modal-quote">${esc(b.text)}</div>`; break;
+        case "p":     html += `<div class="modal-p"   style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "h1":    html += `<div class="modal-h1"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "h2":    html += `<div class="modal-h2"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "h3":    html += `<div class="modal-h3"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "li":    html += `<div class="modal-li"  style="padding-left:${14 + ind}px">${esc(b.text)}</div>`; break;
+        case "todo":  html += `<div class="modal-todo" style="padding-left:${ind}px">${b.checked?"☑":"☐"} ${esc(b.text)}</div>`; break;
+        case "quote": html += `<div class="modal-quote" style="margin-left:${ind}px">${esc(b.text)}</div>`; break;
         case "hr":    html += `<hr class="modal-hr">`; break;
       }
     }
