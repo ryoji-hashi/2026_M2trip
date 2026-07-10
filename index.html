@@ -127,6 +127,60 @@ body{
 .filter-btn-reset.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
 .filter-btn-reset:not(.on){border-style:dashed}
 
+/* modal */
+.modal-overlay{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(0,0,0,.65);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-sheet{
+  background:var(--s1);border:1px solid var(--border);border-bottom:none;
+  border-radius:var(--r2) var(--r2) 0 0;
+  width:100%;max-width:640px;max-height:82vh;overflow-y:auto;
+  padding:20px 18px 44px;position:relative;
+  transform:translateY(40px);transition:transform .22s;
+}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--border);background:var(--s2);
+  color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{background:var(--s3)}
+.modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px;padding-right:36px;line-height:1.4}
+.modal-time{font-size:13px;color:var(--text2);margin-bottom:12px;font-variant-numeric:tabular-nums}
+.modal-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.modal-loc{font-size:12px;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:3px}
+.modal-loc::before{content:"📍";font-size:11px}
+.modal-link{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 14px;margin-bottom:12px;
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
+  color:var(--accent);font-size:12px;text-decoration:none;word-break:break-all;
+}
+.modal-link:hover{border-color:var(--accent)}
+.modal-link::before{content:"🔗";flex-shrink:0}
+.modal-notes{
+  font-size:12px;color:var(--text2);background:var(--s2);
+  border-radius:var(--r);padding:10px 12px;margin-bottom:10px;
+  line-height:1.7;white-space:pre-wrap;border:1px solid var(--border);
+}
+.modal-body{margin-top:4px}
+.modal-p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:6px}
+.modal-h1{font-size:16px;font-weight:700;color:var(--text);margin:14px 0 6px}
+.modal-h2{font-size:14px;font-weight:700;color:var(--text);margin:12px 0 5px}
+.modal-h3{font-size:13px;font-weight:600;color:var(--text);margin:10px 0 4px}
+.modal-li{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:2px;padding-left:14px;position:relative}
+.modal-li::before{content:"•";position:absolute;left:4px;color:var(--text3)}
+.modal-todo{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:2px}
+.modal-quote{font-size:13px;color:var(--text3);border-left:3px solid var(--border);padding-left:10px;margin-bottom:6px;font-style:italic}
+.modal-hr{border:none;border-top:1px solid var(--border);margin:10px 0}
+
 /* view switch (list / calendar) */
 .view-row{display:flex;gap:6px;margin-bottom:14px}
 
@@ -168,7 +222,7 @@ body{
 .ev-card{
   background:var(--s2);border:1px solid var(--border);
   border-radius:var(--r2);padding:9px 12px;
-  transition:border-color .12s;
+  transition:border-color .12s;cursor:pointer;
 }
 .ev-card:hover{border-color:var(--brd-hi)}
 
@@ -272,6 +326,13 @@ footer a:hover{text-decoration:underline}
   <div class="stats" id="stats"></div>
 </main>
 
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-sheet" id="modal-sheet" role="dialog" aria-modal="true">
+    <button type="button" class="modal-close" id="modal-close" aria-label="閉じる">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
 <footer>
   <div>タイムゾーンを切り替えると全予定の現地時刻が自動変換されます</div>
   <div style="margin-top:6px">
@@ -312,10 +373,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "MU516",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "上海(浦東) → ミラノ",
@@ -339,10 +402,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "MU243",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ミラノ泊",
@@ -366,10 +431,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ミラノ→ヴェネツィア",
@@ -393,10 +460,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ヴェネツィア泊",
@@ -420,10 +489,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
-    "notes": "",
-    "status": "plan",
+    "url": "https://jp.trip.com/hotels/detail/?hotelId=13660415&checkIn=2026-09-16&checkOut=2026-09-17&locale=ja-JP",
+    "notes": "おはる前払い済み(キャンセル不可)、現地払い+2330円(€12.6)",
+    "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ドロミティ山登り",
@@ -440,10 +511,61 @@ const EVENTS      = [
     ],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": [
+      {
+        "t": "p",
+        "text": "参考"
+      },
+      {
+        "t": "p",
+        "text": "宿泊先"
+      },
+      {
+        "t": "h1",
+        "text": "行き先"
+      },
+      {
+        "t": "p",
+        "text": "ヴェネツィアからコルチナまで2h40m"
+      },
+      {
+        "t": "h3",
+        "text": "day1"
+      },
+      {
+        "t": "li",
+        "text": "コルチナ西側(ちょい遠)"
+      },
+      {
+        "t": "h3",
+        "text": "day2"
+      },
+      {
+        "t": "li",
+        "text": "コルチナの東側"
+      },
+      {
+        "t": "h3",
+        "text": "day3"
+      },
+      {
+        "t": "li",
+        "text": "コルチナの北側(遠い)"
+      },
+      {
+        "t": "li",
+        "text": "コルチナ東側の残り"
+      },
+      {
+        "t": "h2",
+        "text": "claudeのプラン"
+      }
+    ]
   },
   {
     "name": "ヴェネツィア→バルセロナ",
@@ -463,10 +585,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "Venas di Cadore泊1/3",
@@ -483,10 +607,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "バルセロナ泊1/2",
@@ -508,10 +634,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "https://www.airbnb.jp/rooms/31302139?photo_id=2050554456&source_impression_id=p3_1783660621_P3BuDTtPn1J0Maed&guests=1&adults=1",
     "notes": "",
-    "status": "plan",
+    "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "サグラダファミリア",
@@ -533,10 +661,12 @@ const EVENTS      = [
     ],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "バルセロナ泊2/2",
@@ -556,10 +686,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
-    "status": "plan",
+    "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "Venas di Cadore泊2/3",
@@ -576,10 +708,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "https://www.airbnb.jp/rooms/31302139?photo_id=2050554456&source_impression_id=p3_1783660621_P3BuDTtPn1J0Maed&guests=1&adults=1",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "バルセロナ→パリ",
@@ -599,10 +733,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "パリ泊1/3",
@@ -624,10 +760,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "Venas di Cadore泊3/3",
@@ -644,13 +782,36 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
-    "name": "ディズニーランド",
+    "name": "パリ市内観光",
+    "dt": "2026-09-20T09:00",
+    "dtEnd": "2026-09-20T20:00",
+    "srcTZ": 2,
+    "members": [
+      "せいや",
+      "ほっぴー",
+      "もとや",
+      "たかし"
+    ],
+    "groupTags": [],
+    "category": "🗺️ 観光",
+    "loc": "",
+    "url": "",
+    "notes": "",
+    "status": "plan",
+    "isSplit": false,
+    "isRejoin": false,
+    "content": []
+  },
+  {
+    "name": "Disneyland Paris",
     "dt": "2026-09-20T09:00",
     "dtEnd": "2026-09-20T20:00",
     "srcTZ": 2,
@@ -662,10 +823,12 @@ const EVENTS      = [
     "groupTags": [],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ヴェネツィア → パリ",
@@ -682,10 +845,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "EJU4888w",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "パリ泊2/3",
@@ -709,10 +874,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "モン・サン・ミシェル",
@@ -736,10 +903,12 @@ const EVENTS      = [
     ],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "パリ泊3/3",
@@ -763,10 +932,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "パリ→プラハ",
@@ -788,10 +959,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "TO4398",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "パリ泊4",
@@ -807,10 +980,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "プラハ泊",
@@ -832,10 +1007,25 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "https://www.airbnb.jp/rooms/32181493?adults=7&check_in=2026-09-22&check_out=2026-09-23&guests=7&location=Praha%20hl.n.%20Wilsonova%20DB&search_mode=regular_search&source_impression_id=p3_1783663145_P3aZCoRM3zmb-BeZ&previous_page_section_name=1001&federated_search_id=05a51e0a-09dc-480b-8ce4-453bcba97221",
     "notes": "",
-    "status": "plan",
+    "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": [
+      {
+        "t": "li",
+        "text": "Prague Main Train Station"
+      },
+      {
+        "t": "li",
+        "text": "google mapのリンク上に"
+      },
+      {
+        "t": "p",
+        "text": "内容見れる？"
+      }
+    ]
   },
   {
     "name": "パリ→フランクフルト",
@@ -851,10 +1041,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "プラハ→ウィーン",
@@ -876,10 +1068,32 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
+  },
+  {
+    "name": "ワルシャワ→クラクフ",
+    "dt": "2026-09-23T15:50",
+    "dtEnd": "2026-09-23T19:50",
+    "srcTZ": 2,
+    "members": [
+      "ごんちゃん"
+    ],
+    "groupTags": [
+      "ごんちゃん"
+    ],
+    "category": "🚌 バス",
+    "loc": "",
+    "url": "",
+    "notes": "Flix Warsaw west station -  Krakow MDA bus station",
+    "status": "ok",
+    "isSplit": false,
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "フランクフルト泊",
@@ -895,10 +1109,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ウィーン泊",
@@ -920,10 +1136,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ウィーン→ハルシュタット",
@@ -945,10 +1163,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ハルシュタット観光",
@@ -970,10 +1190,12 @@ const EVENTS      = [
     ],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ハルシュタット→ザルツブルク",
@@ -995,10 +1217,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "乗り継ぎあり",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ザルツブルク泊",
@@ -1020,10 +1244,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "フランクフルト→ミュンヘン",
@@ -1039,10 +1265,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ザルツブルク→ミュンヘン",
@@ -1064,10 +1292,12 @@ const EVENTS      = [
     ],
     "category": "🚆 鉄道",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ミュンヘン泊1/2",
@@ -1092,10 +1322,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "October fest",
@@ -1120,10 +1352,12 @@ const EVENTS      = [
     ],
     "category": "🗺️ 観光",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ミュンヘン泊2/2",
@@ -1148,10 +1382,12 @@ const EVENTS      = [
     ],
     "category": "🏨 宿泊",
     "loc": "",
+    "url": "",
     "notes": "",
     "status": "plan",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ミュンヘン→ホーチミン",
@@ -1177,10 +1413,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "VN032",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   },
   {
     "name": "ホーチミン→関空",
@@ -1206,10 +1444,12 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
+    "url": "",
     "notes": "VN320",
     "status": "ok",
     "isSplit": false,
-    "isRejoin": false
+    "isRejoin": false,
+    "content": []
   }
 ];
 const ALL_MEMBERS = [
@@ -1224,7 +1464,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-07-10T06:53:38.019Z";
+const UPDATED_AT  = "2026-07-10T07:43:45.323Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1324,8 +1564,11 @@ function badgeInfo(ev){
 }
 
 /* ─────────── RENDER: リスト ─────────── */
+let renderedEvents = [];
 function renderListHtml(byDate){
   let html = "";
+  let idx = 0;
+  renderedEvents = [];
   for(const [dateKey, evs] of byDate){
     html += `<div class="dt-sec">
       <div class="dt-head">
@@ -1334,6 +1577,7 @@ function renderListHtml(byDate){
       </div>`;
 
     for(const ev of evs){
+      renderedEvents.push(ev);
       const badge = badgeInfo(ev);
 
       /* split/rejoin banner */
@@ -1348,7 +1592,7 @@ function renderListHtml(byDate){
           ${ev.convEnd ? `<div class="ev-t-end">〜${ev.convEnd.timeStr}</div>` : ""}
         </div>
         <div class="ev-line"></div>
-        <div class="ev-card">
+        <div class="ev-card" data-ev-idx="${idx++}">
           <div class="badges">
             ${ev.category ? `<span class="badge g-cat">${esc(ev.category)}</span>` : ""}
             <span class="badge ${badge.cls}">${badge.label}</span>
@@ -1450,6 +1694,62 @@ function render(){
   if(view==="list") timelineEl.innerHTML = renderListHtml(byDate);
   else              calendarEl.innerHTML = renderCalendarHtml(byDate);
 }
+
+/* ─────────── MODAL ─────────── */
+
+const modalOverlay = document.getElementById("modal-overlay");
+const modalContent = document.getElementById("modal-content");
+
+function openModal(ev){
+  const badge = badgeInfo(ev);
+  const timeLabel = ev.conv.timeStr + (ev.convEnd ? `〜${ev.convEnd.timeStr}` : "");
+  let html = `<div class="modal-title">${esc(ev.name)}</div>`;
+  html += `<div class="modal-time">${selTZ.flag} ${selTZ.abbr}：${timeLabel}</div>`;
+  html += `<div class="modal-badges">
+    ${ev.category ? `<span class="badge g-cat">${esc(ev.category)}</span>` : ""}
+    <span class="badge ${badge.cls}">${badge.label}</span>
+    <span class="badge-count">${(ev.members||[]).length}名</span>
+    <span class="${ev.status==="ok"?"st-ok":"st-ng"}">${ev.status==="ok"?"✅ 確定":"📝 計画中"}</span>
+  </div>`;
+  if(ev.loc)   html += `<div class="modal-loc">${esc(ev.loc)}</div>`;
+  if(ev.url)   html += `<a class="modal-link" href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(ev.url)}</a>`;
+  if(ev.notes) html += `<div class="modal-notes">${esc(ev.notes)}</div>`;
+  if(ev.content && ev.content.length){
+    html += `<div class="modal-body">`;
+    for(const b of ev.content){
+      switch(b.t){
+        case "p":     html += `<div class="modal-p">${esc(b.text)}</div>`; break;
+        case "h1":    html += `<div class="modal-h1">${esc(b.text)}</div>`; break;
+        case "h2":    html += `<div class="modal-h2">${esc(b.text)}</div>`; break;
+        case "h3":    html += `<div class="modal-h3">${esc(b.text)}</div>`; break;
+        case "li":    html += `<div class="modal-li">${esc(b.text)}</div>`; break;
+        case "todo":  html += `<div class="modal-todo">${b.checked?"☑":"☐"} ${esc(b.text)}</div>`; break;
+        case "quote": html += `<div class="modal-quote">${esc(b.text)}</div>`; break;
+        case "hr":    html += `<hr class="modal-hr">`; break;
+      }
+    }
+    html += `</div>`;
+  }
+  modalContent.innerHTML = html;
+  modalOverlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(){
+  modalOverlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("modal-close").addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", e=>{ if(e.target===modalOverlay) closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+document.getElementById("timeline").addEventListener("click", e=>{
+  const card = e.target.closest(".ev-card");
+  if(!card) return;
+  const idx = parseInt(card.dataset.evIdx, 10);
+  if(!isNaN(idx) && renderedEvents[idx]) openModal(renderedEvents[idx]);
+});
 
 /* ─────────── INIT ─────────── */
 
