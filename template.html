@@ -180,6 +180,7 @@ body{
 .modal-todo{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:2px}
 .modal-quote{font-size:13px;color:var(--text3);border-left:3px solid var(--border);padding-left:10px;margin-bottom:6px;font-style:italic}
 .modal-hr{border:none;border-top:1px solid var(--border);margin:10px 0}
+.modal-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;word-break:break-all}
 
 /* view switch (list / calendar) */
 .view-row{display:flex;gap:6px;margin-bottom:14px}
@@ -610,13 +611,13 @@ function openModal(ev){
     for(const b of ev.content){
       const ind = (b.d||0) * 16;
       switch(b.t){
-        case "p":     html += `<div class="modal-p"   style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h1":    html += `<div class="modal-h1"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h2":    html += `<div class="modal-h2"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "h3":    html += `<div class="modal-h3"  style="padding-left:${ind}px">${esc(b.text)}</div>`; break;
-        case "li":    html += `<div class="modal-li"  style="padding-left:${14 + ind}px">${esc(b.text)}</div>`; break;
-        case "todo":  html += `<div class="modal-todo" style="padding-left:${ind}px">${b.checked?"☑":"☐"} ${esc(b.text)}</div>`; break;
-        case "quote": html += `<div class="modal-quote" style="margin-left:${ind}px">${esc(b.text)}</div>`; break;
+        case "p":     html += `<div class="modal-p"    style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h1":    html += `<div class="modal-h1"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h2":    html += `<div class="modal-h2"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "h3":    html += `<div class="modal-h3"   style="padding-left:${ind}px">${b.html}</div>`; break;
+        case "li":    html += `<div class="modal-li"   style="padding-left:${14 + ind}px">${b.html}</div>`; break;
+        case "todo":  html += `<div class="modal-todo" style="padding-left:${ind}px">${b.checked?"☑":"☐"} ${b.html}</div>`; break;
+        case "quote": html += `<div class="modal-quote" style="margin-left:${ind}px">${b.html}</div>`; break;
         case "hr":    html += `<hr class="modal-hr">`; break;
       }
     }

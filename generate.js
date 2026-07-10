@@ -127,6 +127,19 @@ function notionGet(endpoint) {
   });
 }
 
+// rich_text 配列を HTML 文字列に変換する。インラインリンク（href）は <a> タグに変換する。
+function rtToHtml(rtArr) {
+  return rtArr.map(r => {
+    const text = (r.plain_text || "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    if (r.href) {
+      const href = r.href.replace(/"/g, "&quot;");
+      return `<a href="${href}" target="_blank" rel="noopener">${text}</a>`;
+    }
+    return text;
+  }).join("");
+}
+
 async function fetchBlocks(blockId, depth) {
   if (depth === undefined) depth = 0;
   try {
@@ -135,19 +148,19 @@ async function fetchBlocks(blockId, depth) {
     for (const block of (res.results || [])) {
       const type  = block.type;
       const rtArr = block[type]?.rich_text ?? [];
-      const text  = rtArr.map(r => r.plain_text).join("");
+      const html  = rtToHtml(rtArr);
       let item = null;
       switch (type) {
-        case "paragraph":          item = text ? { t: "p",     text, d: depth } : null; break;
-        case "heading_1":          item = text ? { t: "h1",    text, d: depth } : null; break;
-        case "heading_2":          item = text ? { t: "h2",    text, d: depth } : null; break;
-        case "heading_3":          item = text ? { t: "h3",    text, d: depth } : null; break;
-        case "bulleted_list_item": item = text ? { t: "li",    text, d: depth } : null; break;
-        case "numbered_list_item": item = text ? { t: "li",    text, d: depth } : null; break;
-        case "to_do":              item = text ? { t: "todo",  text, d: depth, checked: block.to_do?.checked ?? false } : null; break;
-        case "quote":              item = text ? { t: "quote", text, d: depth } : null; break;
+        case "paragraph":          item = html ? { t: "p",     html, d: depth } : null; break;
+        case "heading_1":          item = html ? { t: "h1",    html, d: depth } : null; break;
+        case "heading_2":          item = html ? { t: "h2",    html, d: depth } : null; break;
+        case "heading_3":          item = html ? { t: "h3",    html, d: depth } : null; break;
+        case "bulleted_list_item": item = html ? { t: "li",    html, d: depth } : null; break;
+        case "numbered_list_item": item = html ? { t: "li",    html, d: depth } : null; break;
+        case "to_do":              item = html ? { t: "todo",  html, d: depth, checked: block.to_do?.checked ?? false } : null; break;
+        case "quote":              item = html ? { t: "quote", html, d: depth } : null; break;
         case "divider":            item = { t: "hr", d: depth }; break;
-        default:                   item = text ? { t: "p",     text, d: depth } : null; break;
+        default:                   item = html ? { t: "p",     html, d: depth } : null; break;
       }
       if (item) results.push(item);
       // インデントされた子ブロックを再帰取得（深さ上限4）
