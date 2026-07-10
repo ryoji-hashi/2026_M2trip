@@ -122,6 +122,10 @@ body{
 }
 .grp-btn.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
 .grp-btn:hover:not(.on){border-color:var(--brd-hi)}
+.reset-row{margin-bottom:10px}
+.filter-btn-reset{padding:4px 14px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-family:inherit;cursor:pointer;transition:all .12s}
+.filter-btn-reset.on{border-color:var(--brd-hi);background:var(--s3);color:var(--text)}
+.filter-btn-reset:not(.on){border-style:dashed}
 
 /* view switch (list / calendar) */
 .view-row{display:flex;gap:6px;margin-bottom:14px}
@@ -255,6 +259,7 @@ footer a:hover{text-decoration:underline}
 <button type="button" class="fab collapsed" id="fab" aria-label="Notionで予定を編集"></button>
 
 <main class="main">
+  <div class="reset-row" id="reset-row"></div>
   <div class="filter-label">メンバー</div>
   <div class="grp-row" id="grp-row"></div>
   <div class="filter-label" id="group-label" style="display:none">グループ</div>
@@ -645,6 +650,24 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
+    "name": "ディズニーランド",
+    "dt": "2026-09-20T09:00",
+    "dtEnd": "2026-09-20T20:00",
+    "srcTZ": 2,
+    "members": [
+      "ごんちゃん",
+      "おはる",
+      "なーちゃん"
+    ],
+    "groupTags": [],
+    "category": "🗺️ 観光",
+    "loc": "",
+    "notes": "",
+    "status": "plan",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
     "name": "ヴェネツィア → パリ",
     "dt": "2026-09-20T14:55",
     "dtEnd": "2026-09-20T16:40",
@@ -815,6 +838,25 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
+    "name": "パリ→フランクフルト",
+    "dt": "2026-09-23T12:00",
+    "dtEnd": "2026-09-23T12:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん"
+    ],
+    "groupTags": [
+      "ドイツ組(2)"
+    ],
+    "category": "🚆 鉄道",
+    "loc": "",
+    "notes": "",
+    "status": "plan",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
     "name": "プラハ→ウィーン",
     "dt": "2026-09-23T14:37",
     "dtEnd": "2026-09-23T18:49",
@@ -836,6 +878,25 @@ const EVENTS      = [
     "loc": "",
     "notes": "",
     "status": "ok",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
+    "name": "フランクフルト泊",
+    "dt": "2026-09-23T20:00",
+    "dtEnd": "2026-09-24T07:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん"
+    ],
+    "groupTags": [
+      "ドイツ組(2)"
+    ],
+    "category": "🏨 宿泊",
+    "loc": "",
+    "notes": "",
+    "status": "plan",
     "isSplit": false,
     "isRejoin": false
   },
@@ -886,25 +947,6 @@ const EVENTS      = [
     "loc": "",
     "notes": "",
     "status": "ok",
-    "isSplit": false,
-    "isRejoin": false
-  },
-  {
-    "name": "October fest",
-    "dt": "2026-09-24T09:00",
-    "dtEnd": "2026-09-27T09:00",
-    "srcTZ": 2,
-    "members": [
-      "そうし",
-      "だいちゃん"
-    ],
-    "groupTags": [
-      "ドイツ組(2)"
-    ],
-    "category": "🗺️ 観光",
-    "loc": "",
-    "notes": "",
-    "status": "plan",
     "isSplit": false,
     "isRejoin": false
   },
@@ -984,6 +1026,25 @@ const EVENTS      = [
     "isRejoin": false
   },
   {
+    "name": "フランクフルト→ミュンヘン",
+    "dt": "2026-09-25T12:00",
+    "dtEnd": "2026-09-25T14:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん"
+    ],
+    "groupTags": [
+      "ドイツ組(2)"
+    ],
+    "category": "🚆 鉄道",
+    "loc": "",
+    "notes": "",
+    "status": "plan",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
     "name": "ザルツブルク→ミュンヘン",
     "dt": "2026-09-25T18:00",
     "dtEnd": "2026-09-25T19:46",
@@ -1020,13 +1081,44 @@ const EVENTS      = [
       "たかし",
       "せいや",
       "もとや",
+      "そうし",
+      "だいちゃん",
       "りょうじ"
     ],
     "groupTags": [
       "大多数(6)",
+      "ドイツ組(2)",
       "りょうじ"
     ],
     "category": "🏨 宿泊",
+    "loc": "",
+    "notes": "",
+    "status": "plan",
+    "isSplit": false,
+    "isRejoin": false
+  },
+  {
+    "name": "October fest",
+    "dt": "2026-09-26T09:00",
+    "dtEnd": "2026-09-27T09:00",
+    "srcTZ": 2,
+    "members": [
+      "そうし",
+      "だいちゃん",
+      "おはる",
+      "なーちゃん",
+      "ほっぴー",
+      "たかし",
+      "せいや",
+      "もとや",
+      "りょうじ"
+    ],
+    "groupTags": [
+      "ドイツ組(2)",
+      "大多数(6)",
+      "りょうじ"
+    ],
+    "category": "🗺️ 観光",
     "loc": "",
     "notes": "",
     "status": "plan",
@@ -1045,10 +1137,13 @@ const EVENTS      = [
       "たかし",
       "せいや",
       "もとや",
+      "そうし",
+      "だいちゃん",
       "りょうじ"
     ],
     "groupTags": [
       "大多数(6)",
+      "ドイツ組(2)",
       "りょうじ"
     ],
     "category": "🏨 宿泊",
@@ -1111,7 +1206,7 @@ const EVENTS      = [
     ],
     "category": "✈️ 移動",
     "loc": "",
-    "notes": "",
+    "notes": "VN320",
     "status": "ok",
     "isSplit": false,
     "isRejoin": false
@@ -1129,7 +1224,7 @@ const ALL_MEMBERS = [
   "そうし",
   "りょうじ"
 ];
-const UPDATED_AT  = "2026-07-10T05:02:50.165Z";
+const UPDATED_AT  = "2026-07-10T06:53:38.019Z";
 
 /* ── 定数 ── */
 /* 旅程: 大阪 → (上海経由) → イタリア・(スペイン)・フランス・チェコ・
@@ -1464,18 +1559,20 @@ function toggleCategory(cat){
 
 /* メンバーフィルター (ALL_MEMBERS から動的生成、固定グループ定義を持たない) */
 const grpRow = document.getElementById("grp-row");
+const resetRow = document.getElementById("reset-row");
 const btnAll = document.createElement("button");
-btnAll.className = "grp-btn filter-btn";
+btnAll.type = "button";
+btnAll.className = "filter-btn filter-btn-reset";
 btnAll.dataset.ftype = "";
 btnAll.dataset.fvalue = "";
-btnAll.textContent = "すべて";
+btnAll.textContent = "すべての予定";
 btnAll.addEventListener("click",()=>{
   filterMode = null;
   clearOtherSelections(null);
   syncFilterButtons();
   render();
 });
-grpRow.appendChild(btnAll);
+resetRow.appendChild(btnAll);
 
 ALL_MEMBERS.forEach(name=>{
   const btn = document.createElement("button");
