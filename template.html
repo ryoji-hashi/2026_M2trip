@@ -307,10 +307,8 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <header class="hdr">
-  <div class="filter-label" style="margin-bottom:6px">タイムゾーン</div>
   <div class="tz-row" id="tz-row"></div>
-  <div class="filter-label" id="group-label" style="display:none;margin-top:10px;margin-bottom:6px">グループ</div>
-  <div class="grp-row" id="group-row" style="margin-bottom:0"></div>
+  <div class="grp-row" id="group-row" style="display:none;margin-top:8px;margin-bottom:0"></div>
 </header>
 
 <button type="button" class="fab collapsed" id="fab" aria-label="Notionで予定を編集"></button>
@@ -784,7 +782,7 @@ ALL_MEMBERS.forEach(name=>{
 /* グループフィルター (Notionの「グループ」プロパティから動的生成。データがなければ行ごと非表示) */
 const groupRow = document.getElementById("group-row");
 if (GROUP_TAGS.length) {
-  document.getElementById("group-label").style.display = "";
+  groupRow.style.display = "";
   GROUP_TAGS.forEach(tag=>{
     const btn = document.createElement("button");
     btn.className = "grp-btn filter-btn";
